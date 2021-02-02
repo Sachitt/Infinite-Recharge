@@ -81,6 +81,11 @@ public class Constants {
     public static double PIVOT_MAX_REVOLUTION = 83;
     public static double PIVOT_THRESHOLD = 1;
 
+    public static double PIVOT_KP = 0.3;
+    public static double PIVOT_KI = 0;
+    public static double PIVOT_KD = 3.5;
+    public static double PIVOT_KF = 0.5;
+
     public static double RADIANS_TO_REV = 10; // NEED TO GET
 
     // Auto Constants

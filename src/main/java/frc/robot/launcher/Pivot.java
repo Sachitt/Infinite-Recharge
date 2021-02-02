@@ -1,6 +1,7 @@
 package frc.robot.launcher;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -28,13 +29,21 @@ public class Pivot {
         lowerLimit = new DigitalInput(Constants.PIVOT_LIMIT_PORT);
         alignment = new Alignment();
         initShuffleBoard();
+
+        sparkA.getPIDController().setP(Constants.PIVOT_KP);
+        sparkA.getPIDController().setI(Constants.PIVOT_KI);
+        sparkA.getPIDController().setD(Constants.PIVOT_KD);
+        sparkA.getPIDController().setFF(Constants.PIVOT_KF);
+
+        // Gravity assists downward motion, so auto speed downwards is less
+        sparkA.getPIDController().setOutputRange(Constants.PIVOT_AUTO_SPEED - 0.05, Constants.PIVOT_AUTO_SPEED);
     }
 
-    public void initShuffleBoard(){
+    public void initShuffleBoard() {
         SmartDashboard.putNumber("Pivot Rev", 0);
     }
 
-    public void workShuffleBoard(){
+    public void workShuffleBoard() {
         SmartDashboard.putNumber("Pivot Rev", getRevolution());
     }
 
@@ -153,23 +162,17 @@ public class Pivot {
     }
 
     public void setRevolution(double rev) {
-        double speed = Constants.PIVOT_AUTO_SPEED;
-        int sign = -1;
-        if (rev < getRevolution()) {
-            sign *= -1;
-            speed -= 0.05;
+        double targetRev = rev;
+
+        // We can prevent the issue of zeroing correctly by preventing the PID
+        // Controller from setting a value below the zero threshold
+
+        if (rev < Constants.PIVOT_ZERO_THRESHOLD) {
+            targetRev = Constants.PIVOT_ZERO_THRESHOLD;
+        } else if (rev > Constants.PIVOT_MAX_REVOLUTION) {
+            targetRev = Constants.PIVOT_MAX_REVOLUTION;
         }
 
-        // Prevent pivot to go below the lowerLimit switch
-        if (!lowerLimit.get() && sign > 0) {
-            callibrate();
-            return;
-        }
-
-        if (Math.abs(getRevolution() - rev) < Constants.PIVOT_THRESHOLD) {
-            sparkA.set(0);
-            return;
-        }
-        sparkA.set(sign * speed);
+        sparkA.getPIDController().setReference(-targetRev, ControlType.kPosition);
     }
 }
