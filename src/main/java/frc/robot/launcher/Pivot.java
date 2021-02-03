@@ -1,5 +1,8 @@
 package frc.robot.launcher;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -70,7 +73,7 @@ public class Pivot {
         if (Math.abs(Robot.operatorController.getY(Hand.kLeft)) > Constants.TRIGGER_THRESHOLD) {
             teleopRun();
         } else if (Robot.operatorController.getBButton()) {
-            // align();
+            align();
         } else if (Robot.operatorController.getXButton()) {
             callibrate();
         } else {
@@ -122,7 +125,7 @@ public class Pivot {
     }
 
     public void align() {
-        setRevolution(alignment.getAngle() * Constants.RADIANS_TO_REV);
+        setRevolution(alignment.get_theta() * Constants.RADIANS_TO_REV);
     }
 
     public void setAgainst() {
@@ -175,4 +178,6 @@ public class Pivot {
 
         sparkA.getPIDController().setReference(-targetRev, ControlType.kPosition);
     }
+
+
 }

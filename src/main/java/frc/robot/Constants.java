@@ -110,4 +110,15 @@ public class Constants {
     public static final int ENCODER_REV = 42;// temporary
 
     public static final int WHEEL_REV = 7;
+
+    //General Robot
+    
+    public static double V = 6.0;        //The exit velocity of the ball from the tube in the direction in which the tube is pointing
+    public static double HP = 3.05;      //The height (from the ground) of the point within the port where we wish to shoot
+    public static double LLPIV = 0.79;   //The horizontal distance from the pivot point of the tube to the limelight
+    public static double LT = 0.94;      //The length of the tube from the pivot point to the exit point
+    public static double HPIV = 0.18;    //The height of the pivot point of the tube off the ground
+    public static double G = 9.81;       //gravitational acceleration constant
+
+
 }
