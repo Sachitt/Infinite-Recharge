@@ -81,9 +81,9 @@ public class Constants {
     public static double PIVOT_MAX_REVOLUTION = 83;
     public static double PIVOT_THRESHOLD = 1;
 
-    public static double PIVOT_KP = 0.3;
+    public static double PIVOT_KP = 0.5;
     public static double PIVOT_KI = 0;
-    public static double PIVOT_KD = 3.5;
+    public static double PIVOT_KD = 3;
     public static double PIVOT_KF = 0.5;
 
     public static double RADIANS_TO_REV = 10; // NEED TO GET
@@ -114,10 +114,10 @@ public class Constants {
     //General Robot
     
     public static double V = 6.0;        //The exit velocity of the ball from the tube in the direction in which the tube is pointing
-    public static double HP = 3.05;      //The height (from the ground) of the point within the port where we wish to shoot
-    public static double LLPIV = 0.79;   //The horizontal distance from the pivot point of the tube to the limelight
-    public static double LT = 0.94;      //The length of the tube from the pivot point to the exit point
-    public static double HPIV = 0.18;    //The height of the pivot point of the tube off the ground
+    public static double HP = 2.49555;      //The height (from the ground) of the point within the port where we wish to shoot
+    public static double LLPIV = 0.7408926;   //The horizontal distance from the pivot point of the tube to the limelight
+    public static double LT = 0.861401122;      //The length of the tube from the pivot point to the exit point
+    public static double HPIV = 0.1676908;    //The height of the pivot point of the tube off the ground
     public static double G = 9.81;       //gravitational acceleration constant
 
 

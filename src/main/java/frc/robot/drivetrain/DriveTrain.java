@@ -34,6 +34,11 @@ public class DriveTrain {
 
         // Group sparks into an ArrayList for a cleaner intialization loop
         ArrayList<CANSparkMax> sparkList = new ArrayList<CANSparkMax>() {
+            /**
+             *
+             */
+            private static final long serialVersionUID = 1L;
+
             {
                 add(lsparkA);
                 add(lsparkB);

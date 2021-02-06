@@ -39,7 +39,7 @@ public class Pivot {
         sparkA.getPIDController().setFF(Constants.PIVOT_KF);
 
         // Gravity assists downward motion, so auto speed downwards is less
-        sparkA.getPIDController().setOutputRange(Constants.PIVOT_AUTO_SPEED - 0.05, Constants.PIVOT_AUTO_SPEED);
+        sparkA.getPIDController().setOutputRange(-Constants.PIVOT_AUTO_SPEED + 0.05, Constants.PIVOT_AUTO_SPEED);
     }
 
     public void initShuffleBoard() {
@@ -69,6 +69,7 @@ public class Pivot {
     }
 
     public void run() {
+       System.out.println(getRevolution());
         workShuffleBoard();
         if (Math.abs(Robot.operatorController.getY(Hand.kLeft)) > Constants.TRIGGER_THRESHOLD) {
             teleopRun();
@@ -165,8 +166,10 @@ public class Pivot {
     }
 
     public void setRevolution(double rev) {
-        double targetRev = rev;
 
+        
+        double targetRev = rev;
+       
         // We can prevent the issue of zeroing correctly by preventing the PID
         // Controller from setting a value below the zero threshold
 
@@ -175,6 +178,9 @@ public class Pivot {
         } else if (rev > Constants.PIVOT_MAX_REVOLUTION) {
             targetRev = Constants.PIVOT_MAX_REVOLUTION;
         }
+
+        
+
 
         sparkA.getPIDController().setReference(-targetRev, ControlType.kPosition);
     }
