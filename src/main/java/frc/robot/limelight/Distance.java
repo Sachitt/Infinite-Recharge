@@ -11,7 +11,7 @@ public class Distance {
     }
 
     public double getDistance(double ty) {
-        return (getHeight()) / Math.tan(getAngle(ty));
+        return -(getHeight()) / Math.tan(getAngle(ty));
     }
 
     public double getHeight() {

@@ -70,6 +70,7 @@ public class Shooter {
      * Call periodically in teleopPeriodic
      */
     public void run() {
+        // System.out.println(getRPM());
         if (Robot.operatorController.getTriggerAxis(Hand.kRight) >= Constants.TRIGGER_THRESHOLD) {
             shoot();
         } else if (Robot.operatorController.getStartButton()) {

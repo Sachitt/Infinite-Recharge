@@ -16,7 +16,7 @@ class Alignment {
     private double maxDisplacement;
 
     Alignment() {
-        this.distance = new Distance(Constants.MOUNTING_HEIGHT, Constants.MOUNTING_ANGLE, Constants.REFRENCE_HEIGHT);
+        this.distance = new Distance(Constants.LLH, Constants.MOUNTING_ANGLE, Constants.HP);
         this.pipeline = Constants.PORT_PIPELINE;
         this.velocity = Constants.SHOOTER_MAX_VELOCITY;
 
@@ -63,6 +63,7 @@ class Alignment {
         //creates the array lists for storing values 
         double ty = limeLight.getTy();
         double dist = distance.getDistance(ty);
+
         
         ArrayList<Double> theta_list = new ArrayList<>();       
         ArrayList<Double> difference_list =  new ArrayList<>();
@@ -88,6 +89,7 @@ class Alignment {
 
         //gets and returns the best theta value for the smallest difference between the right and left side of the equation
         double theta_value = theta_list.get(index_of_min);
+        System.out.println(dist + ", " + theta_value);
         return theta_value;
     }
 

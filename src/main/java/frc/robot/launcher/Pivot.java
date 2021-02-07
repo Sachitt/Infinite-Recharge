@@ -39,7 +39,7 @@ public class Pivot {
         sparkA.getPIDController().setFF(Constants.PIVOT_KF);
 
         // Gravity assists downward motion, so auto speed downwards is less
-        sparkA.getPIDController().setOutputRange(-Constants.PIVOT_AUTO_SPEED + 0.05, Constants.PIVOT_AUTO_SPEED);
+        sparkA.getPIDController().setOutputRange(-Constants.PIVOT_AUTO_SPEED - 0.05, Constants.PIVOT_AUTO_SPEED);
     }
 
     public void initShuffleBoard() {
@@ -69,15 +69,19 @@ public class Pivot {
     }
 
     public void run() {
-       System.out.println(getRevolution());
+        // System.out.println(getRevolution());
+       
         workShuffleBoard();
         if (Math.abs(Robot.operatorController.getY(Hand.kLeft)) > Constants.TRIGGER_THRESHOLD) {
             teleopRun();
-        } else if (Robot.operatorController.getBButton()) {
+        } else if (Robot.operatorController.getStickButton(Hand.kRight)) {
             align();
         } else if (Robot.operatorController.getXButton()) {
             callibrate();
-        } else {
+        }  else if (Robot.operatorController.getStickButton(Hand.kLeft)) {
+            reset();
+            
+        }   else {
             // DPad controls
             switch (Robot.operatorController.getPOV()) {
                 case 0:
@@ -107,6 +111,10 @@ public class Pivot {
         sparkA.set(0);
     }
 
+    public void reset() {
+        setRevolution(Constants.PIVOT_ZERO_THRESHOLD);
+    }
+
     public void teleopRun() {
         // Prevent pivot to go below the lowerLimit switch
         if (!lowerLimit.get() && Robot.operatorController.getY(Hand.kLeft) > 0) {
@@ -121,6 +129,7 @@ public class Pivot {
 
         if (getRevolution() > Constants.PIVOT_MAX_REVOLUTION && Robot.operatorController.getY(Hand.kLeft) < 0) {
             return;
+
         }
         sparkA.set(Robot.operatorController.getY(Hand.kLeft) * Constants.PIVOT_TELEOP_SPEED);
     }
@@ -142,7 +151,7 @@ public class Pivot {
     }
 
     public void setTrench() {
-        setRevolution(3.8);
+        setRevolution(7.5);
     }
 
     public boolean atAlign() {
@@ -166,7 +175,7 @@ public class Pivot {
     }
 
     public void setRevolution(double rev) {
-
+        // System.out.println(getRevolution() + ", " + rev);
         
         double targetRev = rev;
        
