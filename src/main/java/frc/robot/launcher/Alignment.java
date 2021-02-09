@@ -78,8 +78,11 @@ class Alignment {
         //calculates the difference between the left and right side of the equation for each theta value and stores it in difference_list
         for (double theta : theta_list){
             double theta_input = Math.toRadians(theta);
-            double leftside = dist + Constants.LLPIV - Constants.LT*Math.cos(theta_input);
-            double rightside = Constants.V*Math.cos(theta_input)*(Math.sqrt((2*(Constants.HP-Constants.LT*Math.sin(theta_input)-Constants.HPIV)/Constants.G)));
+            double COS = Math.cos(theta_input);
+            double SIN = Math.sin(theta_input);
+            double time = (dist+Constants.LLPIV-Constants.LT*COS)/(Constants.V*COS);
+            double leftside = Constants.HP-(Constants.LT*SIN)-Constants.HPIV;
+            double rightside = (Constants.V*SIN*time)+(0.5*Constants.G*(time*time));
             double difference = Math.abs(leftside - rightside);
             difference_list.add(difference);
         }
