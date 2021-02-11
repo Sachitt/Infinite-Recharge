@@ -71,12 +71,16 @@ public class DriveTrain {
     }
 
     public void run() {
-        if (Robot.driverController.getAButtonPressed()) {
+        if (Robot.driverController.getYButtonPressed()) {
             invert = !invert;
         }
 
         if (Robot.driverController.getBButton()) {
             align();
+        } else if (Robot.driverController.getAButton()) {
+            forward();
+        } else if (Robot.driverController.getYButton()) {
+            backward();
         } else {
             runTankDrive();
             reset();
@@ -85,6 +89,30 @@ public class DriveTrain {
 
     public void moveForward() {
         drive.arcadeDrive(Constants.DRIVE_FORWARD_SPEED, 0);
+    }
+
+    public void forward() {
+        // LB and RB are used to change the driveSpeed during the match
+        // Drive power constants might be correct
+        double driveSpeed = Constants.DRIVE_REGULAR_POWER;
+        if (Robot.driverController.getBumper(Hand.kLeft))
+            driveSpeed = Constants.DRIVE_SLOW_POWER;
+        else if (Robot.driverController.getBumper(Hand.kRight))
+            driveSpeed = Constants.DRIVE_TURBO_POWER;
+
+        drive.arcadeDrive(driveSpeed, 0);
+    }
+
+    public void backward() {
+        // LB and RB are used to change the driveSpeed during the match
+        // Drive power constants might be correct
+        double driveSpeed = Constants.DRIVE_REGULAR_POWER;
+        if (Robot.driverController.getBumper(Hand.kLeft))
+            driveSpeed = Constants.DRIVE_SLOW_POWER;
+        else if (Robot.driverController.getBumper(Hand.kRight))
+            driveSpeed = Constants.DRIVE_TURBO_POWER;
+
+        drive.arcadeDrive(-driveSpeed, 0);
     }
 
     public void stop() {
@@ -96,7 +124,7 @@ public class DriveTrain {
             drive.arcadeDrive(0, pidControl.getValue(0, alignment.getError()));
         }
     }
-    
+
     public void reset() {
         pidControl.cleanup();
     }
