@@ -105,6 +105,7 @@ public class Pivot {
                     stop();
             }
         }
+        SmartDashboard.putNumber("PivotRevolution", alignment.get_theta());
     }
 
     public void stop() {
@@ -135,7 +136,7 @@ public class Pivot {
     }
 
     public void align() {
-        setRevolution(alignment.get_theta() * Constants.RADIANS_TO_REV);
+        setRevolution(alignment.get_theta());
     }
 
     public void setAgainst() {

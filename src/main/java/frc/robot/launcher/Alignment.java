@@ -7,6 +7,8 @@ import frc.robot.Constants;
 import frc.robot.limelight.Distance;
 import frc.robot.limelight.LimeLight;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 class Alignment {
     private Distance distance;
     private LimeLight limeLight;
@@ -63,7 +65,6 @@ class Alignment {
         //creates the array lists for storing values 
         double ty = limeLight.getTy();
         double dist = distance.getDistance(ty);
-
         
         ArrayList<Double> theta_list = new ArrayList<>();       
         ArrayList<Double> difference_list =  new ArrayList<>();
@@ -92,7 +93,7 @@ class Alignment {
 
         //gets and returns the best theta value for the smallest difference between the right and left side of the equation
         double theta_value = theta_list.get(index_of_min);
-        System.out.println(dist + ", " + theta_value);
+        System.out.println(dist + ", " + theta_value + ", " + ty);
         return theta_value;
     }
 

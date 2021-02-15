@@ -81,6 +81,12 @@ public class Shooter {
             stop();
         }
 
+        if (Robot.operatorController.getXButton()) {
+            open();
+        } else {
+            close();
+        }
+
         workShuffleBoard();
     }
 
@@ -103,16 +109,16 @@ public class Shooter {
 
         spinUp();
 
-        if (System.currentTimeMillis() - startTime > Constants.SHOOTER_SHOOT_TIME) {
-            open();
-        }
+        
     }
 
     /**
      * Opens tube for shooting
      */
     public void open() {
-        shooterSolenoid.set(Value.kReverse);
+        if (System.currentTimeMillis() - startTime > Constants.SHOOTER_SHOOT_TIME && startTime != 0) {
+            shooterSolenoid.set(Value.kReverse);
+        }
     }
 
     /**
@@ -172,7 +178,6 @@ public class Shooter {
      * sets motors and pneumatics to default state and resets macros
      */
     public void stop() {
-        close();
         spinDown();
         startTime = 0; // Resets macros timing
     }

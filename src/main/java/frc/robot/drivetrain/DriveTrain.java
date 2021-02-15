@@ -71,7 +71,7 @@ public class DriveTrain {
     }
 
     public void run() {
-        if (Robot.driverController.getYButtonPressed()) {
+        if (Robot.driverController.getXButtonPressed()) {
             invert = !invert;
         }
 

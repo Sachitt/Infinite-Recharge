@@ -44,7 +44,7 @@ public class Constants {
     public static double DRIVE_TURBO_POWER = 0.9;
 
     public static float DRIVE_KP = 0.3f;
-    public static float DRIVE_KI = 0;
+    public static float DRIVE_KI = 0f;
     public static float DRIVE_KD = 0.041f;
     public static double DRIVE_MAX_ROTATION_SPEED = 0.23;
     public static double DRIVE_ROTATION_TOLERANCE = 5;

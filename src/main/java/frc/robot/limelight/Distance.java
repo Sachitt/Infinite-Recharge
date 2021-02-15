@@ -1,5 +1,6 @@
 package frc.robot.limelight;
 
+
 public class Distance {
     private double mountingHeight, refrenceHeight; // Height relative to the ground in meters
     private double mountingAngle; // Angle relative to ground plane in degrees
@@ -11,7 +12,7 @@ public class Distance {
     }
 
     public double getDistance(double ty) {
-        return -(getHeight()) / Math.tan(getAngle(ty));
+        return -(getHeight()) / Math.tan(getAngle(Math.toRadians(ty)));
     }
 
     public double getHeight() {
