@@ -12,7 +12,7 @@ public class Distance {
     }
 
     public double getDistance(double ty) {
-        return -(getHeight()) / Math.tan(getAngle(Math.toRadians(ty)));
+        return (getHeight()) / Math.tan(getAngle(Math.toRadians(ty)));
     }
 
     public double getHeight() {

@@ -105,7 +105,15 @@ public class Pivot {
                     stop();
             }
         }
-        SmartDashboard.putNumber("PivotRevolution", alignment.get_theta());
+        //System.out.println("revolution: " + getRevolution() + " angle: " + revToAngle(getRevolution()));
+    }
+
+    private double angleToRev(double angle) {
+        return (33/17) * angle - (858/17);
+    }
+
+    private double revToAngle(double rev) {
+        return 0.51 * rev + 26;
     }
 
     public void stop() {
@@ -136,7 +144,8 @@ public class Pivot {
     }
 
     public void align() {
-        setRevolution(alignment.get_theta());
+        setRevolution(angleToRev(angleToRev(alignment.get_theta())));
+        //System.out.println("targetRev" + angleToRev(alignment.get_theta()));
     }
 
     public void setAgainst() {
