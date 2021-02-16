@@ -99,6 +99,7 @@ class Alignment {
         double tAir = dist/(Constants.V*Math.cos(Math.toRadians(theta_value)));
         double disty = Constants.V*Math.sin(Math.toRadians(theta_value))*tAir + 0.5*Constants.G*tAir*tAir;
         disty += Constants.HPIV+Constants.LT*Math.sin(Math.toRadians(theta_value));
+        disty *= 3.281;
         System.out.println("Time in Air: " + tAir + ", Vertical Distance: " + disty);
 
         return theta_value;
