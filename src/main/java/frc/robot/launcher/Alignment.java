@@ -93,7 +93,14 @@ class Alignment {
 
         //gets and returns the best theta value for the smallest difference between the right and left side of the equation
         double theta_value = theta_list.get(index_of_min);
-        System.out.println("Distance: " + dist * 3.281 + "theta_value: " + theta_value);
+        System.out.println("Distance: " + dist * 3.281 + ", Theta_value: " + theta_value);
+
+        //some code to test out the physics and find the root of the problem
+        double tAir = dist/(Constants.V*Math.cos(Math.toRadians(theta_value)));
+        double disty = Constants.V*Math.sin(Math.toRadians(theta_value))*tAir + 0.5*Constants.G*tAir*tAir;
+        disty += Constants.HPIV+Constants.LT*Math.sin(Math.toRadians(theta_value));
+        System.out.println("Time in Air: " + tAir + ", Vertical Distance: " + disty);
+
         return theta_value;
     }
 
