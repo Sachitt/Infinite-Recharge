@@ -112,7 +112,7 @@ public class Constants {
 
     //General Robot
     
-    public static double V = 15.24;        //The exit velocity of the ball from the tube in the direction in which the tube is pointing
+    public static double V = 32;        //The exit velocity of the ball from the tube in the direction in which the tube is pointing
     public static double HP = 2.49555;      //The height (from the ground) of the point within the port where we wish to shoot
     //public static double HP = 2.1636;
     public static double HP_DIST = 2.1636+0.20;
