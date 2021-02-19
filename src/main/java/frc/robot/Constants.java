@@ -43,7 +43,7 @@ public class Constants {
     public static double DRIVE_TURBO_POWER = 0.9;
 
     public static float DRIVE_KP = 0.28f;
-    public static float DRIVE_KI = 0.001f;
+    public static float DRIVE_KI = 0f;
     public static float DRIVE_KD = 0.055f;
     public static double DRIVE_MAX_ROTATION_SPEED = 0.23;
     public static double DRIVE_ROTATION_TOLERANCE = 0.5;
@@ -112,10 +112,11 @@ public class Constants {
 
     //General Robot
     
-    public static double V = 32;        //The exit velocity of the ball from the tube in the direction in which the tube is pointing
+    //public static double V = 32;        //The exit velocity of the ball from the tube in the direction in which the tube is pointing
+    public static double V = 30.48;
     public static double HP = 2.49555;      //The height (from the ground) of the point within the port where we wish to shoot
     //public static double HP = 2.1636;
-    public static double HP_DIST = 2.1636+0.20;
+    public static double HP_DIST = 2.1425;
     public static double LLPIV = 0.7408926;   //The horizontal distance from the pivot point of the tube to the limelight
     public static double LT = 0.861401122;      //The length of the tube from the pivot point to the exit point
     public static double HPIV = 0.1676908;    //The height of the pivot point of the tube off the ground

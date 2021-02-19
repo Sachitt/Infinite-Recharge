@@ -105,15 +105,11 @@ public class Pivot {
                     stop();
             }
         }
-        //System.out.println("revolution: " + getRevolution() + " angle: " + revToAngle(getRevolution()));
+        System.out.println("revolution: " + getRevolution());
     }
 
     private double angleToRev(double angle) {
-        return (33/17) * angle - (858/17);
-    }
-
-    private double revToAngle(double rev) {
-        return 0.51 * rev + 26;
+        return 1.98 * angle - 51.7;
     }
 
     public void stop() {
@@ -144,8 +140,7 @@ public class Pivot {
     }
 
     public void align() {
-        setRevolution(angleToRev(angleToRev(alignment.get_theta())));
-        //System.out.println("targetRev" + angleToRev(alignment.get_theta()));
+        setRevolution((angleToRev(alignment.get_theta())));
     }
 
     public void setAgainst() {
