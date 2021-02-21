@@ -171,23 +171,25 @@ public class Shooter {
      * Turn motors slowly in the same direction
      */
     public void turn() {
-        sparkA.set(Constants.SHOOTER_TURN_SPEED);
+        // sparkA.set(Constants.SHOOTER_TURN_SPEED);
+        return;
     }
 
     /**
      * Calls turn until the wheel completes 2-3 rotations
      */
     public boolean rotate() {
-        if (startTime == 0) {
-            startTime = System.currentTimeMillis();
-        }
+        // if (startTime == 0) {
+        //     startTime = System.currentTimeMillis();
+        // }
 
-        if (System.currentTimeMillis() - startTime > Constants.SHOOTER_ROTATE_TIME) {
-            spinDown();
-            return true;
-        }
-        turn();
-        return false;
+        // if (System.currentTimeMillis() - startTime > Constants.SHOOTER_ROTATE_TIME) {
+        //     spinDown();
+        //     return true;
+        // }
+        // turn();
+        // return false;
+        return false; 
     }
 
     /**

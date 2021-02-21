@@ -140,7 +140,17 @@ public class Pivot {
     }
 
     public void align() {
-        setRevolution((angleToRev(alignment.get_theta())));
+        double theta_val = alignment.get_theta();
+        if(theta_val >= 20) {
+            setRevolution((angleToRev(theta_val)));
+        } else {
+            //call other function
+            Shooter.shooterTarget = Constants.SHOOTER_SLOW_TARGET_RPM;
+            double second_theta_val = alignment.get_second_theta();
+            setRevolution(angleToRev(second_theta_val));
+            
+            
+        }
     }
 
     public void setAgainst() {
