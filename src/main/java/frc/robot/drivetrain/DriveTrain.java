@@ -1,15 +1,29 @@
 package frc.robot.drivetrain;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import frc.robot.Constants;
 import frc.robot.PIDControl;
 import frc.robot.Robot;
@@ -17,11 +31,22 @@ import frc.robot.Robot;
 public class DriveTrain {
     private CANSparkMax lsparkA, lsparkB, lsparkC, rsparkA, rsparkB, rsparkC;
     private DifferentialDrive drive;
+    private SpeedControllerGroup leftGroup, rightGroup;
 
     private boolean invert;
 
     private PIDControl pidControl;
     private Alignment alignment;
+
+    private AHRS mGyro;
+
+    private final DifferentialDriveOdometry mOdometry;
+    private DifferentialDriveVoltageConstraint mConstraint;
+    private TrajectoryConfig mConfig;
+    private Trajectory mTrajectory;
+    private RamseteController mRamesete;
+
+    private boolean mStarted;
 
     public DriveTrain() {
         lsparkA = new CANSparkMax(Constants.DRIVE_LEFT_PORTS[0], MotorType.kBrushless);
@@ -56,8 +81,8 @@ public class DriveTrain {
 
         }
 
-        SpeedControllerGroup leftGroup = new SpeedControllerGroup(lsparkA, lsparkB, lsparkC);
-        SpeedControllerGroup rightGroup = new SpeedControllerGroup(rsparkA, rsparkB, rsparkC);
+        leftGroup = new SpeedControllerGroup(lsparkA, lsparkB, lsparkC);
+        rightGroup = new SpeedControllerGroup(rsparkA, rsparkB, rsparkC);
 
         drive = new DifferentialDrive(leftGroup, rightGroup);
 
@@ -68,6 +93,30 @@ public class DriveTrain {
 
         // Store variables
         this.invert = false;
+
+        // Odometry
+        lsparkA.getEncoder().setVelocityConversionFactor(Constants.DRIVE_ENCODER_DISTANCE_PER_PULSE);
+        rsparkA.getEncoder().setVelocityConversionFactor(Constants.DRIVE_ENCODER_DISTANCE_PER_PULSE);
+        lsparkA.getEncoder().setPositionConversionFactor(Constants.DRIVE_ENCODER_DISTANCE_PER_PULSE);
+        rsparkA.getEncoder().setPositionConversionFactor(Constants.DRIVE_ENCODER_DISTANCE_PER_PULSE);
+
+        mGyro = new AHRS();
+        mOdometry = new DifferentialDriveOdometry(mGyro.getRotation2d());
+        mConstraint = new DifferentialDriveVoltageConstraint(
+                new SimpleMotorFeedforward(Constants.DRIVE_VOLTS, Constants.DRIVE_VOLTS_SECOND_METER,
+                        Constants.DRIVE_VOLTS_SECOND_SQUARED_METER),
+                Constants.DRIVE_KINEMATICS, Constants.DRIVE_MAX_VOLTAGE);
+        mConfig = new TrajectoryConfig(Constants.DRIVE_MAX_VELOCITY, Constants.DRIVE_MAX_ACCELERATION)
+                .setKinematics(Constants.DRIVE_KINEMATICS).addConstraint(mConstraint);
+        mTrajectory = TrajectoryGenerator.generateTrajectory(
+                // Start at the origin facing the +X direction
+                new Pose2d(0, 0, new Rotation2d(0)),
+                // Pass through these two interior waypoints, making an 's' curve path
+                List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+                // End 3 meters straight ahead of where we started, facing forward
+                new Pose2d(3, 0, new Rotation2d(0)),
+                // Pass config
+                mConfig);
     }
 
     public void run() {
@@ -84,7 +133,45 @@ public class DriveTrain {
         } else {
             runTankDrive();
             reset();
+            mOdometry.update(mGyro.getRotation2d(), lsparkA.getEncoder().getPosition(),
+                    rsparkA.getEncoder().getPosition());
+            mStarted = false;
         }
+    }
+
+    public void resetEncoders() {
+        lsparkA.getEncoder().setPosition(0);
+        rsparkA.getEncoder().setPosition(0);
+    }
+
+    public void resetOdometry(Pose2d pose) {
+        resetEncoders();
+        mOdometry.resetPosition(pose, mGyro.getRotation2d());
+    }
+
+    public Pose2d getPose() {
+        return mOdometry.getPoseMeters();
+    }
+
+    public void tankDriveVolts(double leftVolts, double rightVolts) {
+        leftGroup.setVoltage(leftVolts);
+        rightGroup.setVoltage(-rightVolts);
+        drive.feed();
+    }
+
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        return new DifferentialDriveWheelSpeeds(lsparkA.getEncoder().getVelocity(), rsparkA.getEncoder().getVelocity());
+    }
+
+    public void followTrajectory() {
+        if (!mStarted) {
+            resetOdometry(mTrajectory.getInitialPose());
+        }
+
+        mRamesete = new RamseteController(Constants.DRIVE_RAMSETE_B, 
+                        Constants.DRIVE_RAMSETE_ZETA);
+
+        
     }
 
     public void moveForward() {

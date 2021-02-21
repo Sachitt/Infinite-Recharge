@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Constants {
@@ -85,7 +86,7 @@ public class Constants {
     public static double PIVOT_KD = 4;
     public static double PIVOT_KF = 0;
 
-    public static double RADIANS_TO_REV = 1/2.01; // NEED TO GET
+    public static double RADIANS_TO_REV = 1 / 2.01; // NEED TO GET
 
     // Auto Constants
     public static double AUTO_SHOOT_TIME = 2000;
@@ -110,17 +111,34 @@ public class Constants {
 
     public static final int WHEEL_REV = 7;
 
-    //General Robot
-    
-    //public static double V = 32;        //The exit velocity of the ball from the tube in the direction in which the tube is pointing
+    // General Robot
+
+    // public static double V = 32; //The exit velocity of the ball from the tube in
+    // the direction in which the tube is pointing
     public static double V = 30.48;
-    public static double HP = 2.49555;      //The height (from the ground) of the point within the port where we wish to shoot
-    //public static double HP = 2.1636;
+    public static double HP = 2.49555; // The height (from the ground) of the point within the port where we wish to
+                                       // shoot
+    // public static double HP = 2.1636;
     public static double HP_DIST = 2.1425;
-    public static double LLPIV = 0.7408926;   //The horizontal distance from the pivot point of the tube to the limelight
-    public static double LT = 0.861401122;      //The length of the tube from the pivot point to the exit point
-    public static double HPIV = 0.1676908;    //The height of the pivot point of the tube off the ground
-    public static double G = 9.81;       //gravitational acceleration constant
+    public static double LLPIV = 0.7408926; // The horizontal distance from the pivot point of the tube to the limelight
+    public static double LT = 0.861401122; // The length of the tube from the pivot point to the exit point
+    public static double HPIV = 0.1676908; // The height of the pivot point of the tube off the ground
+    public static double G = 9.81; // gravitational acceleration constant
     public static double LLH = 0.381;
 
+    // Robot Characterizations
+    public static final double DRIVE_ENCODER_DISTANCE_PER_PULSE = 0;
+    public static final double DRIVE_VOLTS = 0;
+    public static final double DRIVE_VOLTS_SECOND_METER = 0;
+    public static final double DRIVE_VOLTS_SECOND_SQUARED_METER = 0;
+
+    public static final double DRIVE_TRACK_WIDTH = 0;
+    public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(DRIVE_TRACK_WIDTH);
+    public static final double DRIVE_MAX_VOLTAGE = 0;
+
+    public static final double DRIVE_MAX_VELOCITY = 0;
+    public static final double DRIVE_MAX_ACCELERATION = 0;
+
+    public static final double DRIVE_RAMSETE_B = 0;
+    public static final double DRIVE_RAMSETE_ZETA = 0;
 }
