@@ -52,6 +52,8 @@ public class Constants {
     public static double SHOOTER_LOWER_SPEED = 0.7;
     public static double SHOOTER_UPPER_SPEED = 0.9;
     public static double SHOOTER_TARGET_RPM = 4500;
+    public static double SHOOTER_SLOW_TARGET_RPM = 3500;
+
     public static double SHOOTER_THRESHOLD_RPM = 100;
 
     public static double SHOOTER_TURN_SPEED = 0.2;
@@ -114,6 +116,7 @@ public class Constants {
     
     //public static double V = 32;        //The exit velocity of the ball from the tube in the direction in which the tube is pointing
     public static double V = 30.48;
+    public static double V2 = 25;
     public static double HP = 2.49555;      //The height (from the ground) of the point within the port where we wish to shoot
     //public static double HP = 2.1636;
     public static double HP_DIST = 2.1425;
@@ -122,5 +125,6 @@ public class Constants {
     public static double HPIV = 0.1676908;    //The height of the pivot point of the tube off the ground
     public static double G = 9.81;       //gravitational acceleration constant
     public static double LLH = 0.381;
+
 
 }
