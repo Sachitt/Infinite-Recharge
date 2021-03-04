@@ -73,7 +73,6 @@ public class DriveTrain {
         this.invert = false;
 
         this.mGyro = new AnalogGyro(0);
-        this.mGyro.reset();
     }
 
     public void run() {
@@ -93,6 +92,10 @@ public class DriveTrain {
         }
 
         System.out.println(mGyro.getRotation2d().getDegrees());
+    }
+
+    public void resetGyro() {
+        mGyro.reset();
     }
 
     public void moveForward() {

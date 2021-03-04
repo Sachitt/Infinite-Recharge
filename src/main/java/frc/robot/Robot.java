@@ -120,6 +120,11 @@ public class Robot extends TimedRobot {
     drivetrain.stop();
   }
 
+  @Override
+  public void teleopInit() {
+    drivetrain.resetGyro();
+  }
+
   /**
    * This function is called periodically during operator control.
    */
