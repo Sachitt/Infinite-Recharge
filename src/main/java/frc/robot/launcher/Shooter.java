@@ -31,9 +31,11 @@ public class Shooter {
     private CANSparkMax sparkA, sparkB; // (L, R)
     private DoubleSolenoid shooterSolenoid; // (closed, open)
     private double startTime; // stores start time of macro call
+    public static double shooterTarget;
 
     public Shooter() {
         initShuffleBoard();
+        shooterTarget = Constants.SHOOTER_TARGET_RPM;
         // Intialize motors
         sparkA = new CANSparkMax(Constants.SHOOTER_PORTS[0], MotorType.kBrushless);
         sparkB = new CANSparkMax(Constants.SHOOTER_PORTS[1], MotorType.kBrushless);
@@ -70,6 +72,7 @@ public class Shooter {
      * Call periodically in teleopPeriodic
      */
     public void run() {
+        System.out.println(shooterTarget);
         // System.out.println(getRPM());
         if (Robot.operatorController.getTriggerAxis(Hand.kRight) >= Constants.TRIGGER_THRESHOLD) {
             shoot();
@@ -131,7 +134,9 @@ public class Shooter {
     /**
      * Spins motors at constant power
      */
+
     public void spinUp() {
+        double sped = shooterTarget;
         /**
          * if (getRPM() - Constants.SHOOTER_TARGET_RPM > Constants.SHOOTER_THRESHOLD_RPM) {
             sparkA.set(Constants.SHOOTER_LOWER_SPEED);
@@ -141,13 +146,24 @@ public class Shooter {
             sparkB.set(-Constants.SHOOTER_UPPER_SPEED);
         }
          */
-        sparkA.getPIDController().setReference(Constants.SHOOTER_TARGET_RPM, ControlType.kVelocity);
+        if (Robot.operatorController.getStartButtonPressed()) {
+            sped = Constants.SHOOTER_TARGET_RPM; //high speed, right side
+        } else if (Robot.operatorController.getBackButtonPressed()) {
+            sped = Constants.SHOOTER_SLOW_TARGET_RPM; //low speed, left side
+        }
+
+        
+        sparkA.getPIDController().setReference(sped, ControlType.kVelocity);
+        
+
+
     }
 
     /**
      * Stop motors
      */
     public void spinDown() {
+        shooterTarget = Constants.SHOOTER_TARGET_RPM;
         sparkA.set(0);
     }
 
@@ -155,23 +171,25 @@ public class Shooter {
      * Turn motors slowly in the same direction
      */
     public void turn() {
-        sparkA.set(Constants.SHOOTER_TURN_SPEED);
+        // sparkA.set(Constants.SHOOTER_TURN_SPEED);
+        return;
     }
 
     /**
      * Calls turn until the wheel completes 2-3 rotations
      */
     public boolean rotate() {
-        if (startTime == 0) {
-            startTime = System.currentTimeMillis();
-        }
+        // if (startTime == 0) {
+        //     startTime = System.currentTimeMillis();
+        // }
 
-        if (System.currentTimeMillis() - startTime > Constants.SHOOTER_ROTATE_TIME) {
-            spinDown();
-            return true;
-        }
-        turn();
-        return false;
+        // if (System.currentTimeMillis() - startTime > Constants.SHOOTER_ROTATE_TIME) {
+        //     spinDown();
+        //     return true;
+        // }
+        // turn();
+        // return false;
+        return false; 
     }
 
     /**
