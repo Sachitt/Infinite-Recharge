@@ -105,7 +105,6 @@ public class Pivot {
                     stop();
             }
         }
-        System.out.println("revolution: " + getRevolution());
     }
 
     private double angleToRev(double angle) {
