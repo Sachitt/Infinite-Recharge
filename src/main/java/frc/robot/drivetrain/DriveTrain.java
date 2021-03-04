@@ -73,6 +73,7 @@ public class DriveTrain {
         this.invert = false;
 
         this.mGyro = new AnalogGyro(0);
+        this.mGyro.reset();
     }
 
     public void run() {
