@@ -25,6 +25,9 @@ public class Constants {
 
     // LimeLight Ports
     public static int PORT_PIPELINE = 0;
+    public static int PORT_PIPELINE_LT = 1;
+    
+
 
     // LimeLight Constants
     public static double MOUNTING_HEIGHT = 0.4191; // Meters
@@ -42,6 +45,7 @@ public class Constants {
     public static double DRIVE_SLOW_POWER = 0.4;
     public static double DRIVE_REGULAR_POWER = 0.7;
     public static double DRIVE_TURBO_POWER = 0.9;
+    public static double DRIVE_PICKUP_SPEED = 0.2;
 
     public static float DRIVE_KP = 0.3f;
     public static float DRIVE_KI = 0f;

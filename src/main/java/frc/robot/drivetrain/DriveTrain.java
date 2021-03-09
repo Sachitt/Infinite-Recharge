@@ -81,7 +81,9 @@ public class DriveTrain {
             forward();
         } else if (Robot.driverController.getYButton()) {
             backward();
-        } else {
+        } else if (Robot.driverController.getStickButton(Hand.kRight)){
+            pickup();
+        }else {
             runTankDrive();
             reset();
         }
@@ -117,6 +119,12 @@ public class DriveTrain {
 
     public void stop() {
         drive.arcadeDrive(0, 0);
+    }
+
+    public void pickup() {
+        if (alignment.targetFoundLT()) {
+            drive.arcadeDrive(Constants.DRIVE_PICKUP_SPEED, pidControl.getValue(0, alignment.getErrorLT()));
+        }
     }
 
     public void align() {
