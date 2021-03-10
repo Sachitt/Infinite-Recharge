@@ -93,7 +93,7 @@ class Alignment {
 
         //gets and returns the best theta value for the smallest difference between the right and left side of the equation
         double theta_value = theta_list.get(index_of_min);
-        System.out.println(dist + ", " + theta_value + ", " + ty);
+        //System.out.println(dist + ", " + theta_value + ", " + ty);
         return theta_value;
     }
 

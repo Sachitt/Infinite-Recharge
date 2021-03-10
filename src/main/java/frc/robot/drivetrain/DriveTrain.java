@@ -21,7 +21,7 @@ public class DriveTrain {
     private boolean invert;
 
     private PIDControl pidControl;
-    private Alignment alignment;
+    private DAlignment alignment;
 
     public DriveTrain() {
         lsparkA = new CANSparkMax(Constants.DRIVE_LEFT_PORTS[0], MotorType.kBrushless);
@@ -64,7 +64,7 @@ public class DriveTrain {
         pidControl = new PIDControl(Constants.DRIVE_KP, Constants.DRIVE_KI, Constants.DRIVE_KP);
         pidControl.setMaxSpeed(Constants.DRIVE_MAX_ROTATION_SPEED);
         pidControl.setTolerance(Constants.DRIVE_ROTATION_TOLERANCE);
-        alignment = new Alignment();
+        alignment = new DAlignment();
 
         // Store variables
         this.invert = false;
@@ -129,6 +129,7 @@ public class DriveTrain {
 
     public void align() {
         if (alignment.targetFound()) {
+            System.out.println("WORKING");
             drive.arcadeDrive(0, pidControl.getValue(0, alignment.getError()));
         }
     }

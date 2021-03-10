@@ -6,7 +6,7 @@ public class LemonTorch {
     private String table;
 
     public LemonTorch() {
-        table = "lemontorch";
+        table = "limelight-intake";
     }
 
     private double GetEntry(String selector) {

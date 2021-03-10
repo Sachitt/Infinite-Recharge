@@ -3,11 +3,11 @@ package frc.robot.drivetrain;
 import frc.robot.Constants;
 import frc.robot.limelight.*;
 
-class Alignment {
+class DAlignment {
     private LimeLight limeLight;
     private LemonTorch lemonTorch;
 
-    Alignment() {
+    DAlignment() {
         limeLight = new LimeLight();
         lemonTorch = new LemonTorch();
     }
@@ -29,11 +29,13 @@ class Alignment {
     }
 
     public boolean targetFoundLT() {
-        limeLight.selectPipeline(Constants.PORT_PIPELINE_LT);
+        lemonTorch.selectPipeline(Constants.PORT_PIPELINE_LT);
 
         if (lemonTorch.getTv() == 0) {
+            System.out.println("TV NOT FOUND");
             return false;
         }
+        System.out.println("IDK");
         return true;
     }
 
@@ -42,6 +44,11 @@ class Alignment {
             return -lemonTorch.getTx();
         }
         return -1;
+    }
+
+    public String determinePath() {
+        
+        return "hi";
     }
 
 
