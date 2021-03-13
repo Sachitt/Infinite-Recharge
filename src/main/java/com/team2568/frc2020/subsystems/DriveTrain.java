@@ -6,7 +6,6 @@ import com.team2568.frc2020.Registers;
 import com.team2568.lib.drivers.SparkMaxFactory;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -58,8 +57,6 @@ public class DriveTrain extends Subsystem {
 
     private DifferentialDrive mDrive;
 
-    private PIDController mLeftController, mRightController;
-
     public static enum DriveMode {
         kTank, kArcade, kDifferential, kOff;
     }
@@ -88,11 +85,6 @@ public class DriveTrain extends Subsystem {
             Constants.kDriveHelper.registerEncoders(laMotor.getEncoder(), raMotor.getEncoder());
 
             mDrive = new DifferentialDrive(lGroup, rGroup);
-
-            mLeftController = new PIDController(Constants.kDriveVelocitykP, Constants.kDriveVelocitykI,
-                    Constants.kDriveVelocitykD);
-            mRightController = new PIDController(Constants.kDriveVelocitykP, Constants.kDriveVelocitykI,
-                    Constants.kDriveVelocitykD);
         }
     }
 
@@ -125,10 +117,8 @@ public class DriveTrain extends Subsystem {
 
     // Speeds in MKS (Meters per second)
     private void differentialDrive(double leftSpeed, double rightSpeed) {
-        lGroup.setVoltage(
-                mLeftController.calculate(Constants.kDriveHelper.encoderToMeter(getLeftVelocity()), leftSpeed));
-        rGroup.setVoltage(
-                mRightController.calculate(Constants.kDriveHelper.encoderToMeter(getRightVelocity()), rightSpeed));
+        lGroup.setVoltage(leftSpeed);
+        rGroup.setVoltage(rightSpeed);
         mDrive.feed();
     }
 
@@ -141,7 +131,7 @@ public class DriveTrain extends Subsystem {
 
     private double getRightPosition() {
         if (Registers.kReal.get()) {
-            return laMotor.getEncoder().getPosition();
+            return raMotor.getEncoder().getPosition();
         }
         return 0;
     }
@@ -155,7 +145,7 @@ public class DriveTrain extends Subsystem {
 
     private double getRightVelocity() {
         if (Registers.kReal.get()) {
-            return laMotor.getEncoder().getVelocity();
+            return raMotor.getEncoder().getVelocity();
         }
         return 0;
     }
@@ -177,6 +167,8 @@ public class DriveTrain extends Subsystem {
     }
 
     public void writeDashboard() {
+        SmartDashboard.putNumber("DriveLeftVelocity", Constants.kDriveHelper.encoderToMeter(getLeftVelocity()) / 60);
+        SmartDashboard.putNumber("DriveRightVelocity", Constants.kDriveHelper.encoderToMeter(getRightVelocity()) / 60);
     }
 
     public void outputTelemetry() {
@@ -191,8 +183,6 @@ public class DriveTrain extends Subsystem {
         } else {
             SmartDashboard.putNumber("DriveLeftPosition", Constants.kDriveHelper.encoderToMeter(getLeftPosition()));
             SmartDashboard.putNumber("DriveRightPosition", Constants.kDriveHelper.encoderToMeter(getRightPosition()));
-            SmartDashboard.putNumber("DriveLeftVelocity", Constants.kDriveHelper.encoderToMeter(getLeftVelocity()));
-            SmartDashboard.putNumber("DriveRightVelocity", Constants.kDriveHelper.encoderToMeter(getRightVelocity()));
         }
     }
 }

@@ -79,9 +79,9 @@ public class DriveTrain extends FSM {
             }
 
             DifferentialDriveWheelSpeeds wheelSpeeds = getSpeed();
-            driveLV = getVoltage(Constants.kDriveHelper.encoderToMeter(Registers.kDriveLeftVelocity.get()),
+            driveLV = getVoltage(Constants.kDriveHelper.encoderToMeter(Registers.kDriveLeftVelocity.get()) / 60,
                     wheelSpeeds.leftMetersPerSecond);
-            driveRV = getVoltage(Constants.kDriveHelper.encoderToMeter(Registers.kDriveRightVelocity.get()),
+            driveRV = getVoltage(Constants.kDriveHelper.encoderToMeter(Registers.kDriveRightVelocity.get()) / 60,
                     wheelSpeeds.rightMetersPerSecond);
             break;
         }
@@ -115,7 +115,7 @@ public class DriveTrain extends FSM {
      */
     private double getVoltage(Double actualSpeed, Double referenceSpeed) {
         return MathUtil.clamp(
-                mVelocityController.calculate(referenceSpeed, Constants.kDriveHelper.encoderToMeter(actualSpeed))
+                mVelocityController.calculate(referenceSpeed, actualSpeed)
                         + mVelocityFeedForward.calculate(referenceSpeed),
                 -Constants.kMaxVoltage, Constants.kMaxVoltage);
     }

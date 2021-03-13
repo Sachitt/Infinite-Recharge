@@ -44,7 +44,7 @@ public class Tube extends Subsystem {
     private Tube() {
         if (Registers.kReal.get()) {
             lMotor = SparkMaxFactory.getDefault(Constants.kTubeLMotor);
-            rMotor = SparkMaxFactory.getInvertedFollower(lMotor, Constants.kTubeLMotor);
+            rMotor = SparkMaxFactory.getInvertedFollower(lMotor, Constants.kTubeRMotor);
         }
     }
 

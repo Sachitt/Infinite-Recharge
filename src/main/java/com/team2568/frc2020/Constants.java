@@ -168,7 +168,7 @@ public class Constants {
 	public static final double kMaxVoltage = 7;
 
 	public static final DifferentialDriveHelper kDriveHelper = new DifferentialDriveHelper(
-			(kDistancePerRevolution / kTicksToRevolution) / kGearReduction);
+			kDistancePerRevolution / kGearReduction);
 
 	// Upper Port Constants
 	public static final double kUpperPortHeight = 2.1425; // Height to the center of the port for theta calculations
