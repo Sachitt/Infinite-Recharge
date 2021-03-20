@@ -1,5 +1,7 @@
 package com.team2568.frc2020.fsm.auto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.team2568.frc2020.Constants;
 import com.team2568.frc2020.Registers;
 import com.team2568.frc2020.fsm.FSM;
@@ -47,7 +49,8 @@ public class DriveTrain extends FSM {
     public static class TankValue {
         private double mL, mR;
 
-        public TankValue(double mL, double mR) {
+        @JsonCreator
+        public TankValue(@JsonProperty("L") double mL, @JsonProperty("R") double mR) {
             this.mL = mL;
             this.mR = mR;
         }

@@ -1,8 +1,14 @@
 package com.team2568.frc2020.fsm.teleop;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.team2568.frc2020.Constants;
 import com.team2568.frc2020.Registers;
 import com.team2568.frc2020.fsm.FSM;
@@ -38,7 +44,24 @@ public class DriveTrain extends FSM {
     private JoystickMap mMap;
 
     private Integer i;
+    @JsonSerialize(using = TankValueSeralizer.class)
     private ArrayList<TankValue> mRecording;
+
+    class TankValueSeralizer extends JsonSerializer<List<TankValue>> {
+
+        @Override
+        public void serialize(List<TankValue> value, JsonGenerator jgen, SerializerProvider provider)
+                throws IOException {
+            jgen.writeStartArray();
+            for (TankValue model : value) {
+                jgen.writeStartObject();
+                jgen.writeObjectField("TankValue", model);
+                jgen.writeEndObject();
+            }
+            jgen.writeEndArray();
+        }
+
+    }
 
     private class JoystickMap {
         private List<TankValue> mUp, mRight, mDown, mLeft;
@@ -185,6 +208,13 @@ public class DriveTrain extends FSM {
             if (!Constants.kDriveController.getAButton()) {
                 nState = DriveState.STANDARD;
                 mMap.set(i, mRecording);
+
+                try {
+                    String serialized = new ObjectMapper().writeValueAsString(mRecording);
+                    SmartDashboard.putString("DriveRecording", serialized);
+                } catch (IOException ex) {
+                    return;
+                }
             }
             break;
         case PLAYBACK:
