@@ -30,8 +30,11 @@ public class DriveTrain extends FSM {
     private RamseteController mRamController;
     private SimpleMotorFeedforward mVelocityFeedForward;
 
+    private int i;
+    private double driveL, driveR;
+
     public enum DriveAutoMode {
-        kOff, kTarget, kTrajectory;
+        kOff, kTarget, kTrajectory, kFollow;
     }
 
     public static DriveTrain getInstance() {
@@ -39,6 +42,23 @@ public class DriveTrain extends FSM {
             mInstance = new DriveTrain();
         }
         return mInstance;
+    }
+
+    public static class TankValue {
+        private double mL, mR;
+
+        public TankValue(double mL, double mR) {
+            this.mL = mL;
+            this.mR = mR;
+        }
+
+        public double getL() {
+            return mL;
+        }
+
+        public double getR() {
+            return mR;
+        }
     }
 
     private DriveTrain() {
@@ -57,21 +77,23 @@ public class DriveTrain extends FSM {
         switch (Registers.kDriveAutoMode.get()) {
         case kOff:
             driveZ = 0;
-            driveLV = 0;
-            driveRV = 0;
+            driveLV = driveRV = 0;
+            driveL = driveR = 0;
 
             // Do not reset controller while in operations
             mAlignController.reset();
             mStart = 0;
+            i = 0;
             break;
         case kTarget:
-            driveLV = 0;
-            driveRV = 0;
+            driveLV = driveRV = 0;
+            driveL = driveR = 0;
             driveZ = getDriveZ();
             break;
         case kTrajectory:
             mTrajectory = Registers.kDriveAutoTrajectory.get();
             driveZ = 0;
+            driveL = driveR = 0;
 
             if (mStart == 0) {
                 mStart = Timer.getFPGATimestamp();
@@ -84,10 +106,27 @@ public class DriveTrain extends FSM {
             driveRV = getVoltage(Constants.kDriveHelper.encoderToMeter(Registers.kDriveRightVelocity.get()) / 60,
                     wheelSpeeds.rightMetersPerSecond);
             break;
+        case kFollow:
+            driveZ = 0;
+            driveLV = driveRV = 0;
+            if (i > Registers.kDriveAutoTankList.get().size()) {
+                driveL = driveR = 0;
+                break;
+            }
+
+            TankValue value = Registers.kDriveAutoTankList.get().get(i);
+
+            driveL = value.getL();
+            driveR = value.getR();
+
+            i++;
         }
+
         Registers.kDriveAutoDriveZ.set(driveZ);
         Registers.kDriveAutoLV.set(driveLV);
         Registers.kDriveAutoRV.set(driveRV);
+        Registers.kDriveAutoL.set(driveL);
+        Registers.kDriveAutoR.set(driveR);
     }
 
     private double getDriveZ() {

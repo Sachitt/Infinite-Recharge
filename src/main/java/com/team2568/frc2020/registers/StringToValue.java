@@ -1,6 +1,10 @@
 package com.team2568.frc2020.registers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.team2568.frc2020.fsm.auto.DriveTrain.DriveAutoMode;
+import com.team2568.frc2020.fsm.auto.DriveTrain.TankValue;
 import com.team2568.frc2020.fsm.auto.Pivot.PivotAutoMode;
 import com.team2568.frc2020.states.ClimbState;
 import com.team2568.frc2020.states.DriveState;
@@ -150,6 +154,13 @@ public interface StringToValue<T> {
         @Override
         public Trajectory convert(String s) {
             return new Trajectory();
+        }
+    };
+
+    public static StringToValue<List<TankValue>> kTankValueList = new StringToValue<List<TankValue>>() {
+        @Override
+        public List<TankValue> convert(String s) {
+            return new ArrayList<TankValue>();
         }
     };
 }

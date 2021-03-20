@@ -1,9 +1,13 @@
 package com.team2568.frc2020.fsm.teleop;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.team2568.frc2020.Constants;
 import com.team2568.frc2020.Registers;
 import com.team2568.frc2020.fsm.FSM;
 import com.team2568.frc2020.fsm.auto.DriveTrain.DriveAutoMode;
+import com.team2568.frc2020.fsm.auto.DriveTrain.TankValue;
 import com.team2568.frc2020.states.DriveState;
 import com.team2568.frc2020.subsystems.DriveTrain.DriveMode;
 
@@ -31,6 +35,49 @@ public class DriveTrain extends FSM {
 
     private boolean isInverted;
 
+    private JoystickMap mMap;
+
+    private Integer i;
+    private ArrayList<TankValue> mRecording;
+
+    private class JoystickMap {
+        private List<TankValue> mUp, mRight, mDown, mLeft;
+
+        public void set(int key, List<TankValue> value) {
+            switch (key) {
+            case 0:
+                mUp = value;
+                break;
+            case 90:
+                mRight = value;
+                break;
+            case 180:
+                mDown = value;
+                break;
+            case 270:
+                mLeft = value;
+                break;
+            default:
+                return;
+            }
+        }
+
+        public List<TankValue> get(int key) {
+            switch (key) {
+            case 0:
+                return mUp;
+            case 90:
+                return mRight;
+            case 180:
+                return mDown;
+            case 270:
+                return mLeft;
+            default:
+                return new ArrayList<TankValue>();
+            }
+        }
+    }
+
     public static DriveTrain getInstance() {
         if (mInstance == null) {
             mInstance = new DriveTrain();
@@ -39,112 +86,126 @@ public class DriveTrain extends FSM {
     }
 
     private DriveTrain() {
+        isInverted = false;
     };
 
     public void compute() {
         nState = Registers.kDriveState.get();
 
         switch (Registers.kDriveState.get()) {
-            case STANDARD:
-                nMode = DriveMode.kTank;
-                left = Constants.kDriveController.getLeftY();
-                right = Constants.kDriveController.getRightY();
-                forward = 0;
-                rotation = 0;
-                isInverted = false;
-
-                // X will invert the controls
-                if (Constants.kDriveController.getXButtonPressed()) {
-                    nState = DriveState.INVERTED;
-                } else if (Constants.kDriveController.getAButton()) {
-                    nState = DriveState.FORWARD;
-                } else if (Constants.kDriveController.getYButton()) {
-                    nState = DriveState.REVERSE;
-                } else if (Constants.kDriveController.getBButton()) {
-                    nState = DriveState.TARGET;
-                    Registers.kDriveAutoMode.set(DriveAutoMode.kTarget);
-                }
-                break;
-            case INVERTED:
-                nMode = DriveMode.kTank;
-                // Has to be flipped both in polarity and sign
+        case STANDARD:
+            nMode = DriveMode.kTank;
+            if (isInverted) {
                 left = -Constants.kDriveController.getRightY();
                 right = -Constants.kDriveController.getLeftY();
-                forward = 0;
-                rotation = 0;
-                isInverted = true;
+            } else {
+                left = Constants.kDriveController.getLeftY();
+                right = Constants.kDriveController.getRightY();
+            }
 
-                // X will invert the controls
-                if (Constants.kDriveController.getXButtonPressed()) {
-                    nState = DriveState.INVERTED;
-                } else if (Constants.kDriveController.getAButton()) {
-                    nState = DriveState.FORWARD;
-                } else if (Constants.kDriveController.getYButton()) {
-                    nState = DriveState.REVERSE;
-                } else if (Constants.kDriveController.getBButton()) {
-                    nState = DriveState.TARGET;
-                    Registers.kDriveAutoMode.set(DriveAutoMode.kTarget);
-                }
-                break;
-            case FORWARD:
-                nMode = DriveMode.kArcade;
-                left = 0;
-                right = 0;
-                // Drive power is conicidently the same as the constant speed we use for forward
-                // and backwards
-                forward = getDrivePower();
-                rotation = 0;
+            forward = 0;
+            rotation = 0;
 
-                if (!Constants.kDriveController.getAButton()) {
-                    // Preserve the previous state when switching back
-                    if (isInverted) {
-                        nState = DriveState.INVERTED;
-                    } else {
-                        nState = DriveState.STANDARD;
-                    }
-                }
-                break;
-            case REVERSE:
-                nMode = DriveMode.kArcade;
-                left = 0;
-                right = 0;
-                // Drive power is conicidently the same as the constant speed we use for forward
-                // and backwards
-                forward = -getDrivePower();
-                rotation = 0;
+            // X will invert the controls
+            if (Constants.kDriveController.getXButtonPressed()) {
+                isInverted = !isInverted;
+            } else if (Constants.kDriveController.getAButton()) {
+                nState = DriveState.FORWARD;
+            } else if (Constants.kDriveController.getYButton()) {
+                nState = DriveState.REVERSE;
+            } else if (Constants.kDriveController.getBButton()) {
+                nState = DriveState.TARGET;
+                Registers.kDriveAutoMode.set(DriveAutoMode.kTarget);
+            } else if (Constants.kDriveController.getPOV() != -1) {
+                i = Constants.kDriveController.getPOV();
 
-                if (!Constants.kDriveController.getYButton()) {
-                    // Preserve the previous state when switching back
-                    if (isInverted) {
-                        nState = DriveState.INVERTED;
-                    } else {
-                        nState = DriveState.STANDARD;
-                    }
+                if (mMap.get(i).size() == 0) {
+                    nState = DriveState.RECORD;
+                    mRecording = new ArrayList<TankValue>();
+                } else {
+                    nState = DriveState.PLAYBACK;
+                    Registers.kDriveAutoMode.set(DriveAutoMode.kFollow);
+                    Registers.kDriveAutoTankList.set(mMap.get(i));
                 }
-                break;
-            case TARGET:
-                nMode = DriveMode.kArcade;
-                left = 0;
-                right = 0;
-                forward = 0;
-                rotation = Registers.kDriveAutoDriveZ.get();
+            }
+            break;
+        case FORWARD:
+            nMode = DriveMode.kArcade;
+            left = 0;
+            right = 0;
+            // Drive power is conicidently the same as the constant speed we use for forward
+            // and backwards
+            forward = getDrivePower();
+            rotation = 0;
 
-                if (!Constants.kDriveController.getBButton()) {
-                    Registers.kDriveAutoMode.set(DriveAutoMode.kOff);
-                    // Preserve the previous state when switching back
-                    if (isInverted) {
-                        nState = DriveState.INVERTED;
-                    } else {
-                        nState = DriveState.STANDARD;
-                    }
-                }
-            case STOP:
-                nMode = DriveMode.kOff;
-                left = 0;
-                right = 0;
-                forward = 0;
-                rotation = 0;
-                break;
+            if (!Constants.kDriveController.getAButton()) {
+                nState = DriveState.STANDARD;
+            }
+            break;
+        case REVERSE:
+            nMode = DriveMode.kArcade;
+            left = 0;
+            right = 0;
+            // Drive power is conicidently the same as the constant speed we use for forward
+            // and backwards
+            forward = -getDrivePower();
+            rotation = 0;
+
+            if (!Constants.kDriveController.getAButton()) {
+                nState = DriveState.STANDARD;
+            }
+            break;
+        case TARGET:
+            nMode = DriveMode.kArcade;
+            left = 0;
+            right = 0;
+            forward = 0;
+            rotation = Registers.kDriveAutoDriveZ.get();
+
+            if (!Constants.kDriveController.getBButton()) {
+                Registers.kDriveAutoMode.set(DriveAutoMode.kOff);
+                nState = DriveState.STANDARD;
+            }
+            break;
+        case RECORD:
+            nMode = DriveMode.kTank;
+            if (isInverted) {
+                left = -Constants.kDriveController.getRightY();
+                right = -Constants.kDriveController.getLeftY();
+            } else {
+                left = Constants.kDriveController.getLeftY();
+                right = Constants.kDriveController.getRightY();
+            }
+
+            forward = 0;
+            rotation = 0;
+
+            mRecording.add(new TankValue(left, right));
+
+            if (!Constants.kDriveController.getAButton()) {
+                nState = DriveState.STANDARD;
+                mMap.set(i, mRecording);
+            }
+            break;
+        case PLAYBACK:
+            nMode = DriveMode.kTank;
+            left = Registers.kDriveAutoL.get();
+            right = Registers.kDriveAutoR.get();
+            forward = 0;
+            rotation = 0;
+
+            if (!Constants.kDriveController.getBButton()) {
+                Registers.kDriveAutoMode.set(DriveAutoMode.kOff);
+                nState = DriveState.STANDARD;
+            }
+            break;
+        case STOP:
+            nMode = DriveMode.kOff;
+            left = 0;
+            right = 0;
+            forward = 0;
+            rotation = 0;
+            break;
         }
 
         setDirection();

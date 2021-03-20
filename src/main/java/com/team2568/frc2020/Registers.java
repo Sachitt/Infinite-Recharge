@@ -1,10 +1,12 @@
 package com.team2568.frc2020;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import com.team2568.frc2020.fsm.auto.DriveTrain.DriveAutoMode;
+import com.team2568.frc2020.fsm.auto.DriveTrain.TankValue;
 import com.team2568.frc2020.fsm.auto.Pivot.PivotAutoMode;
 import com.team2568.frc2020.registers.Register;
 import com.team2568.frc2020.registers.SetOnceRegister;
@@ -132,6 +134,8 @@ public class Registers {
 
 	public static final StoppableRegister<Trajectory> kDriveAutoTrajectory = new StoppableRegister<Trajectory>(
 			StringToValue.kTrajectory, new Trajectory(), new Trajectory());
+	public static final StoppableRegister<List<TankValue>> kDriveAutoTankList = new StoppableRegister<List<TankValue>>(
+			StringToValue.kTankValueList, new ArrayList<TankValue>(), new ArrayList<TankValue>());
 
 	// Pivot Status Registers
 
@@ -142,6 +146,8 @@ public class Registers {
 	public static final UpdateRegister<Double> kDriveAutoDriveZ = new UpdateRegister<Double>(StringToValue.kDouble);
 	public static final UpdateRegister<Double> kDriveAutoLV = new UpdateRegister<Double>(StringToValue.kDouble);
 	public static final UpdateRegister<Double> kDriveAutoRV = new UpdateRegister<Double>(StringToValue.kDouble);
+	public static final UpdateRegister<Double> kDriveAutoL = new UpdateRegister<Double>(StringToValue.kDouble);
+	public static final UpdateRegister<Double> kDriveAutoR = new UpdateRegister<Double>(StringToValue.kDouble);
 
 	public static final List<Register<?>> kRegisters = Collections.unmodifiableList(Arrays.asList(kTelemetry, kReal,
 			kShooterState, kIntakeState, kTubeState, kPivotState, kClimbState, kDriveState, kShooterValue,
