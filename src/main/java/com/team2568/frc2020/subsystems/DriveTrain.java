@@ -167,8 +167,8 @@ public class DriveTrain extends Subsystem {
     }
 
     public void writeDashboard() {
-        SmartDashboard.putNumber("DriveLeftVelocity", Constants.kDriveHelper.encoderToMeter(getLeftVelocity()) / 60);
-        SmartDashboard.putNumber("DriveRightVelocity", Constants.kDriveHelper.encoderToMeter(getRightVelocity()) / 60);
+        SmartDashboard.putNumber("DriveL", driveL);
+        SmartDashboard.putNumber("DriveR", driveR);
     }
 
     public void outputTelemetry() {

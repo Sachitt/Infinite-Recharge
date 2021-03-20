@@ -163,6 +163,19 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		if (Constants.kBackLL.getTx() < 0) {
+			if (Constants.kBackLL.getTy() < 0) {
+				// System.out.println("br");
+			} else {
+				// System.out.println("bb");
+			}
+		} else {
+			if (Constants.kBackLL.getTy() < 0) {
+				// System.out.println("ar");
+			} else {
+				// System.out.println("ab");
+			}
+		}
 	}
 
 	/**

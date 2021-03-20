@@ -36,14 +36,14 @@ public class DriveTrain extends FSM {
     private double left, right;
     private double forward, rotation;
 
-    private int constL, constR;
     private double drivePower;
 
     private boolean isInverted;
 
-    private JoystickMap mMap;
+    private JoystickMap mMap = new JoystickMap();
 
-    private Integer i;
+    private int i;
+    private int j;
     @JsonSerialize(using = TankValueSeralizer.class)
     private ArrayList<TankValue> mRecording;
 
@@ -65,6 +65,14 @@ public class DriveTrain extends FSM {
 
     private class JoystickMap {
         private List<TankValue> mUp, mRight, mDown, mLeft;
+
+        public JoystickMap() {
+            mUp = mRight = mDown = mLeft = new ArrayList<>();
+        }
+
+        public void reset() {
+            mUp = mRight = mDown = mLeft = new ArrayList<>();
+        }
 
         public void set(int key, List<TankValue> value) {
             switch (key) {
@@ -119,11 +127,11 @@ public class DriveTrain extends FSM {
         case STANDARD:
             nMode = DriveMode.kTank;
             if (isInverted) {
-                left = -Constants.kDriveController.getRightY();
-                right = -Constants.kDriveController.getLeftY();
+                right = toDriveSpeed(-Constants.kDriveController.getRightY());
+                left = toDriveSpeed(-Constants.kDriveController.getLeftY());
             } else {
-                left = Constants.kDriveController.getLeftY();
-                right = Constants.kDriveController.getRightY();
+                right = toDriveSpeed(Constants.kDriveController.getLeftY());
+                left = toDriveSpeed(Constants.kDriveController.getRightY());
             }
 
             forward = 0;
@@ -137,18 +145,20 @@ public class DriveTrain extends FSM {
             } else if (Constants.kDriveController.getYButton()) {
                 nState = DriveState.REVERSE;
             } else if (Constants.kDriveController.getBButton()) {
-                nState = DriveState.TARGET;
-                Registers.kDriveAutoMode.set(DriveAutoMode.kTarget);
+                mMap.reset();
+                // nState = DriveState.TARGET;
+                // Registers.kDriveAutoMode.set(DriveAutoMode.kTarget);
             } else if (Constants.kDriveController.getPOV() != -1) {
                 i = Constants.kDriveController.getPOV();
+                if (mMap.get(i).size() != 0) {
+                    nState = DriveState.PLAYBACK;
+                    j = 0;
+                }
 
+            } else if (Constants.kDriveController.getStartButtonPressed()) {
                 if (mMap.get(i).size() == 0) {
                     nState = DriveState.RECORD;
                     mRecording = new ArrayList<TankValue>();
-                } else {
-                    nState = DriveState.PLAYBACK;
-                    Registers.kDriveAutoMode.set(DriveAutoMode.kFollow);
-                    Registers.kDriveAutoTankList.set(mMap.get(i));
                 }
             }
             break;
@@ -193,11 +203,11 @@ public class DriveTrain extends FSM {
         case RECORD:
             nMode = DriveMode.kTank;
             if (isInverted) {
-                left = -Constants.kDriveController.getRightY();
-                right = -Constants.kDriveController.getLeftY();
+                right = toDriveSpeed(-Constants.kDriveController.getRightY());
+                left = toDriveSpeed(-Constants.kDriveController.getLeftY());
             } else {
-                left = Constants.kDriveController.getLeftY();
-                right = Constants.kDriveController.getRightY();
+                right = toDriveSpeed(Constants.kDriveController.getLeftY());
+                left = toDriveSpeed(Constants.kDriveController.getRightY());
             }
 
             forward = 0;
@@ -205,27 +215,35 @@ public class DriveTrain extends FSM {
 
             mRecording.add(new TankValue(left, right));
 
-            if (!Constants.kDriveController.getAButton()) {
+            if (Constants.kDriveController.getStartButtonPressed()) {
                 nState = DriveState.STANDARD;
                 mMap.set(i, mRecording);
-
+                System.out.println(mRecording.toString());
                 try {
                     String serialized = new ObjectMapper().writeValueAsString(mRecording);
-                    SmartDashboard.putString("DriveRecording", serialized);
+                    // System.out.println(serialized);
                 } catch (IOException ex) {
+                    System.out.println(ex.getStackTrace());
                     return;
                 }
             }
             break;
         case PLAYBACK:
             nMode = DriveMode.kTank;
-            left = Registers.kDriveAutoL.get();
-            right = Registers.kDriveAutoR.get();
             forward = 0;
             rotation = 0;
 
-            if (!Constants.kDriveController.getBButton()) {
-                Registers.kDriveAutoMode.set(DriveAutoMode.kOff);
+            if (j > mMap.get(i).size() - 1) {
+                left = 0;
+                right = 0;
+            } else {
+                left = mMap.get(i).get(j).getL();
+                right = mMap.get(i).get(j).getR();
+            }
+
+            j++;
+
+            if (Constants.kDriveController.getPOV() != i) {
                 nState = DriveState.STANDARD;
             }
             break;
@@ -238,10 +256,8 @@ public class DriveTrain extends FSM {
             break;
         }
 
-        setDirection();
-
-        Registers.kDriveL.set(constL * toDriveSpeed(left));
-        Registers.kDriveR.set(constR * toDriveSpeed(right));
+        Registers.kDriveL.set(left);
+        Registers.kDriveR.set(right);
         Registers.kDriveF.set(forward);
         Registers.kDriveZ.set(rotation);
 
@@ -250,12 +266,16 @@ public class DriveTrain extends FSM {
     }
 
     private double toDriveSpeed(double joystick) {
+        int joystickDirection = 1;
+        if (joystick < 0) {
+            joystickDirection *= -1;
+        }
         // However driveExponent should be constant (Changeable by SmartDashboard)
         double driveExponent = SmartDashboard.getNumber("Drive Exponent", 1.8);
 
         // Use an exponential curve to provide fine control at low speeds but with a
         // high maximum speed
-        return getDrivePower() * Math.pow(Math.abs(joystick), driveExponent);
+        return joystickDirection * getDrivePower() * Math.pow(Math.abs(joystick), driveExponent);
     }
 
     private double getDrivePower() {
@@ -268,26 +288,6 @@ public class DriveTrain extends FSM {
         }
 
         return drivePower;
-    }
-
-    private void setDirection() {
-        // Easily inverted if wired strangely
-        constL = 1;
-        constR = 1;
-
-        // Use a constant multiplier for +/- direction as the driveExponent could be
-        // even and negate the sign
-        if (right < 0) {
-            constR *= 1;
-        } else if (right > 0) {
-            constR *= -1;
-        }
-
-        if (left < 0) {
-            constL *= 1;
-        } else if (left > 0) {
-            constL *= -1;
-        }
     }
 
     public void writeDashboard() {

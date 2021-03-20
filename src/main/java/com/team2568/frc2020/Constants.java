@@ -57,7 +57,7 @@ public class Constants {
 
 	// LimeLight Objects
 	public static final LimeLight kFrontLL = new LimeLight("limelight");
-	public static final LimeLight kBackLL = new LimeLight("lemontorch");
+	public static final LimeLight kBackLL = new LimeLight("limelight-intake");
 
 	// Controller Constants
 	public static final double kTriggerThreshold = 0.3;

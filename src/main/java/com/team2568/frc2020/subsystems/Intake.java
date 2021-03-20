@@ -29,8 +29,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Intake extends Subsystem {
     private static Intake mInstance;
 
-    // rMotor is a follower so it will not be set explicitly
-    @SuppressWarnings("unused")
     private CANSparkMax lMotor, rMotor;
     private DoubleSolenoid solenoid;
 
@@ -48,7 +46,7 @@ public class Intake extends Subsystem {
     private Intake() {
         if (Registers.kReal.get()) {
             lMotor = SparkMaxFactory.getDefault(Constants.kIntakeLMotor);
-            rMotor = SparkMaxFactory.getInvertedFollower(lMotor, Constants.kIntakeRMotor);
+            rMotor = SparkMaxFactory.getDefault(Constants.kIntakeRMotor);
         }
 
         solenoid = new DoubleSolenoid(Constants.kIntakeF, Constants.kIntakeR);
@@ -65,12 +63,15 @@ public class Intake extends Subsystem {
             switch (Registers.kIntakeValue.get()) {
             case kOff:
                 lMotor.set(0);
+                rMotor.set(0);
                 break;
             case kForward:
                 lMotor.set(Constants.kIntakeSpeed);
+                rMotor.set(-Constants.kIntakeSpeed);
                 break;
             case kReverse:
                 lMotor.set(-Constants.kIntakeSpeed);
+                rMotor.set(Constants.kIntakeSpeed);
                 break;
             }
         }

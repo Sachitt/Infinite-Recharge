@@ -19,7 +19,7 @@ public class LimeLight {
     }
 
     public double getTy() {
-        return mNT.getEntry("tx").getDouble(0);
+        return mNT.getEntry("ty").getDouble(0);
     }
 
     public double getTa() {

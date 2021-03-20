@@ -16,8 +16,8 @@ public class AutoLooper extends ILooper {
     private AutoLooper() {
         super("Auto");
         registerRunnables(DriveTrain.getInstance().getRunnable(), Pivot.getInstance().getRunnable());
-        registerStoppableRegisters(Registers.kDriveAutoMode, Registers.kPivotAutoMode, Registers.kDriveAutoTrajectory);
-        registerUpdateRegisters(Registers.kDriveAutoDriveZ, Registers.kDriveAutoLV, Registers.kDriveAutoRV);
+        registerStoppableRegisters(Registers.kDriveAutoMode, Registers.kPivotAutoMode, Registers.kDriveAutoTrajectory, Registers.kDriveAutoTankList);
+        registerUpdateRegisters(Registers.kDriveAutoDriveZ, Registers.kDriveAutoLV, Registers.kDriveAutoRV, Registers.kDriveAutoL, Registers.kDriveAutoR);
         registerUpdateRegisters(Registers.kPivotAutoTargetRev);
     }
 }

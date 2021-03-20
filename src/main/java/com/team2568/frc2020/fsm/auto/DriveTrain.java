@@ -62,6 +62,11 @@ public class DriveTrain extends FSM {
         public double getR() {
             return mR;
         }
+
+        @Override
+        public String toString() {
+            return "L: " + mL + ", R:" + mR;
+        }
     }
 
     private DriveTrain() {
@@ -112,7 +117,7 @@ public class DriveTrain extends FSM {
         case kFollow:
             driveZ = 0;
             driveLV = driveRV = 0;
-            if (i > Registers.kDriveAutoTankList.get().size()) {
+            if (i > Registers.kDriveAutoTankList.get().size() - 1) {
                 driveL = driveR = 0;
                 break;
             }
