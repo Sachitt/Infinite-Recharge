@@ -1,0 +1,221 @@
+package frc.robot;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+/**
+ * Modified basic tank drive drivetrain for recording
+ */
+public class DriveTrain {
+    private CANSparkMax laMotor, lbMotor, lcMotor, raMotor, rbMotor, rcMotor;
+    private SpeedControllerGroup lGroup, rGroup;
+
+    private DifferentialDrive drive;
+
+    private boolean invert;
+
+    // Modified
+    private final JoystickMap map = new JoystickMap();
+
+    private ArrayList<TankValue> recording;
+
+    private int i, j;
+    private boolean toggle, active, record;
+
+    private double lSpeed, rSpeed;
+
+    /**
+     * Class that manages setting and getting of four tank value lists
+     * 
+     */
+    private class JoystickMap {
+        private List<TankValue> mUp, mRight, mDown, mLeft;
+
+        public JoystickMap() {
+            mUp = mRight = mDown = mLeft = new ArrayList<>();
+        }
+
+        public void reset() {
+            mUp = mRight = mDown = mLeft = new ArrayList<>();
+        }
+
+        public void set(int key, List<TankValue> value) {
+            switch (key) {
+            case 0:
+                mUp = value;
+                break;
+            case 90:
+                mRight = value;
+                break;
+            case 180:
+                mDown = value;
+                break;
+            case 270:
+                mLeft = value;
+                break;
+            default:
+                return;
+            }
+        }
+
+        public List<TankValue> get(int key) {
+            switch (key) {
+            case 0:
+                return mUp;
+            case 90:
+                return mRight;
+            case 180:
+                return mDown;
+            case 270:
+                return mLeft;
+            default:
+                return new ArrayList<TankValue>();
+            }
+        }
+    }
+
+    public class TankValue {
+        private double mL, mR;
+
+        public TankValue(double l, double r) {
+            mL = l;
+            mR = r;
+        }
+
+        public double getL() {
+            return mL;
+        }
+
+        public double getR() {
+            return mR;
+        }
+    }
+
+    public DriveTrain() {
+        laMotor = new CANSparkMax(Constants.kDriveTrainLAMotor, MotorType.kBrushless);
+        lbMotor = new CANSparkMax(Constants.kDriveTrainLBMotor, MotorType.kBrushless);
+        lcMotor = new CANSparkMax(Constants.kDriveTrainLCMotor, MotorType.kBrushless);
+
+        raMotor = new CANSparkMax(Constants.kDriveTrainRAMotor, MotorType.kBrushless);
+        rbMotor = new CANSparkMax(Constants.kDriveTrainRBMotor, MotorType.kBrushless);
+        rcMotor = new CANSparkMax(Constants.kDriveTrainRCMotor, MotorType.kBrushless);
+
+        lGroup = new SpeedControllerGroup(laMotor, lbMotor, lcMotor);
+        rGroup = new SpeedControllerGroup(raMotor, rbMotor, rcMotor);
+
+        drive = new DifferentialDrive(lGroup, rGroup);
+
+        // Modified
+        j = 0;
+
+        invert = toggle = active = record = false;
+    }
+
+    public void run() {
+        if (Constants.driveController.getXButtonPressed()) {
+            invert = !invert;
+        }
+
+        // Modified
+
+        // Reset flags
+        active = false;
+        record = false;
+
+        if (Constants.driveController.getPOV() != -1) {
+            i = Constants.driveController.getPOV();
+            // Recording already set
+            if (map.get(i).size() != 0) {
+                active = true;
+
+                lSpeed = map.get(i).get(j).getL();
+                rSpeed = map.get(i).get(j).getR();
+
+                j++;
+            }
+        }
+
+        if (Constants.driveController.getBButton()) {
+            map.reset();
+        }
+
+        if (Constants.driveController.getStartButtonPressed()) {
+            // Recording not set
+            if (map.get(i).size() == 0) {
+                if (toggle) {
+                    map.set(i, recording);
+                } else {
+                    recording = new ArrayList<TankValue>();
+                    record = true;
+                }
+
+                toggle = !toggle;
+            }
+        }
+
+        if (!active) {
+            setSpeeds();
+            j = 0;
+        }
+
+        if (record) {
+            recording.add(new TankValue(lSpeed, rSpeed));
+        }
+
+        drive.tankDrive(lSpeed, rSpeed);
+    }
+
+    private void setSpeeds() {
+        // constants to easily configure if drive is opposite
+        int constR = 1, constL = 1;
+
+        // Get vertical value of the joysticks
+        double rAxis = Constants.driveController.getY(Hand.kRight);
+        double lAxis = Constants.driveController.getY(Hand.kLeft);
+
+        // Use a constant multiplier for +/- direction as the driveExponent could be
+        // even and negate the sign
+        if (rAxis < 0) {
+            constR *= 1;
+        } else if (rAxis > 0) {
+            constR *= -1;
+        }
+
+        if (lAxis < 0) {
+            constL *= 1;
+        } else if (lAxis > 0) {
+            constL *= -1;
+        }
+
+        // LB and RB are used to change the drivePower during the match
+        double drivePower = Constants.kDriveRegularPower;
+        if (Constants.driveController.getBumper(Hand.kLeft))
+            drivePower = Constants.kDriveSlowPower;
+        else if (Constants.driveController.getBumper(Hand.kRight))
+            drivePower = Constants.kDriveTurboPower;
+
+        // However driveExponent should be constant (Changeable by SmartDashboard)
+        double driveExponent = SmartDashboard.getNumber("Drive Exponent", 1.8);
+
+        // Use an exponential curve to provide fine control at low speeds but with a
+        // high maximum speed
+        double driveL = constL * drivePower * Math.pow(Math.abs(lAxis), driveExponent);
+        double driveR = constR * drivePower * Math.pow(Math.abs(rAxis), driveExponent);
+
+        if (invert) {
+            lSpeed = -driveR;
+            rSpeed = -driveL;
+        } else {
+            lSpeed = driveL;
+            rSpeed = driveR;
+        }
+    }
+}
