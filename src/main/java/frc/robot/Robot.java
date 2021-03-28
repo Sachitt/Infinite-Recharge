@@ -4,7 +4,11 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.wpi.first.wpilibj.TimedRobot;
+import frc.robot.DriveTrain.TankValue;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -16,6 +20,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 public class Robot extends TimedRobot {
   private DriveTrain drive;
   private Intake intake;
+
+  private List<TankValue> tankValues;
+  private int i;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -54,14 +61,27 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    // TODO Determine a way to make this List<TankValue> from prerecorded
+    tankValues = new ArrayList<TankValue>();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+    // Run intake and tube
     intake.intakeDown();
     intake.tubeIntake();
     intake.intake();
+
+    // Iterate over tankValues until all motor values are set. Then stop until
+    // autonomous is disabled
+    if (i < tankValues.size() - 1) {
+      drive.tankDrive(tankValues.get(i).getL(), tankValues.get(i).getR());
+    } else {
+      drive.stop();
+    }
+
+    i++;
   }
 
   /** This function is called once when teleop is enabled. */

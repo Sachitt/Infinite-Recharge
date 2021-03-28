@@ -114,7 +114,7 @@ public class DriveTrain {
         drive = new DifferentialDrive(lGroup, rGroup);
 
         // Modified
-        j = 0;
+        i = j = 0;
 
         invert = toggle = active = record = false;
     }
@@ -131,18 +131,25 @@ public class DriveTrain {
         record = false;
 
         if (Constants.driveController.getPOV() != -1) {
+            // Cache which dpad was pressed for recording
             i = Constants.driveController.getPOV();
+
             // Recording already set
             if (map.get(i).size() != 0) {
-                active = true;
+                if (j < map.get(i).size() - 1) {
+                    // Switch from controllers to map to get motor speeds
+                    active = true;
 
-                lSpeed = map.get(i).get(j).getL();
-                rSpeed = map.get(i).get(j).getR();
+                    lSpeed = map.get(i).get(j).getL();
+                    rSpeed = map.get(i).get(j).getR();
 
-                j++;
+                    // increment every cycle run is called
+                    j++;
+                }
             }
         }
 
+        // Reset all recorded values if B is pressed
         if (Constants.driveController.getBButton()) {
             map.reset();
         }
@@ -150,13 +157,18 @@ public class DriveTrain {
         if (Constants.driveController.getStartButtonPressed()) {
             // Recording not set
             if (map.get(i).size() == 0) {
+                // Toggle starts in the false position
                 if (toggle) {
+                    // update the map value and turn off recording
                     map.set(i, recording);
+                    record = false;
                 } else {
+                    // Reset recording arraylist and turn on functionality
                     recording = new ArrayList<TankValue>();
                     record = true;
                 }
 
+                // switch toggle everytime it enters this section
                 toggle = !toggle;
             }
         }
@@ -170,7 +182,7 @@ public class DriveTrain {
             recording.add(new TankValue(lSpeed, rSpeed));
         }
 
-        drive.tankDrive(lSpeed, rSpeed);
+        tankDrive(lSpeed, rSpeed);
     }
 
     private void setSpeeds() {
@@ -217,5 +229,13 @@ public class DriveTrain {
             lSpeed = driveL;
             rSpeed = driveR;
         }
+    }
+
+    public void tankDrive(double lSpeed, double rSpeed) {
+        drive.tankDrive(lSpeed, rSpeed);
+    }
+
+    public void stop() {
+        drive.stopMotor();
     }
 }
