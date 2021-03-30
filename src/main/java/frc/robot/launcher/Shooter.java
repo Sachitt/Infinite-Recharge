@@ -77,9 +77,11 @@ public class Shooter {
         if (Robot.operatorController.getTriggerAxis(Hand.kRight) >= Constants.TRIGGER_THRESHOLD) {
             shoot();
         } else if (Robot.operatorController.getStartButton()) {
-            turn();
+            //turn();
+            lowSpeed();
         } else if (Robot.operatorController.getBackButton()) {
-            rotate();
+            //rotate();
+            lowestSpeed();
         } else {
             stop();
         }
@@ -137,21 +139,22 @@ public class Shooter {
 
     public void spinUp() {
         double sped = shooterTarget;
-        /**
-         * if (getRPM() - Constants.SHOOTER_TARGET_RPM > Constants.SHOOTER_THRESHOLD_RPM) {
+        if (getRPM() - Constants.SHOOTER_TARGET_RPM > Constants.SHOOTER_THRESHOLD_RPM) {
             sparkA.set(Constants.SHOOTER_LOWER_SPEED);
             sparkB.set(-Constants.SHOOTER_LOWER_SPEED);
         } else {
             sparkA.set(Constants.SHOOTER_UPPER_SPEED);
             sparkB.set(-Constants.SHOOTER_UPPER_SPEED);
         }
-         */
-        if (Robot.operatorController.getStartButtonPressed()) {
+         
+        
+        /*
+         if (Robot.operatorController.getStartButtonPressed()) {
             sped = Constants.SHOOTER_TARGET_RPM; //high speed, right side
         } else if (Robot.operatorController.getBackButtonPressed()) {
             sped = Constants.SHOOTER_SLOW_TARGET_RPM; //low speed, left side
         }
-
+        */
         
         sparkA.getPIDController().setReference(sped, ControlType.kVelocity);
         
@@ -165,6 +168,30 @@ public class Shooter {
     public void spinDown() {
         shooterTarget = Constants.SHOOTER_TARGET_RPM;
         sparkA.set(0);
+    }
+
+    public void lowestSpeed(){
+        double low_sped = Constants.SHOOTER_LOWEST_RPM;
+        if (getRPM() - Constants.SHOOTER_LOWEST_RPM > Constants.SHOOTER_THRESHOLD_RPM) {
+            sparkA.set(Constants.SHOOTER_LOWER_SPEED);
+            sparkB.set(-Constants.SHOOTER_LOWER_SPEED);
+        } else {
+            sparkA.set(Constants.SHOOTER_UPPER_SPEED);
+            sparkB.set(-Constants.SHOOTER_UPPER_SPEED);
+        }
+        sparkA.getPIDController().setReference(low_sped, ControlType.kVelocity);
+    }
+
+    public void lowSpeed(){
+        double low_sped = Constants.SHOOTER_SLOW_TARGET_RPM;
+        if (getRPM() - Constants.SHOOTER_SLOW_TARGET_RPM > Constants.SHOOTER_THRESHOLD_RPM) {
+            sparkA.set(Constants.SHOOTER_LOWER_SPEED);
+            sparkB.set(-Constants.SHOOTER_LOWER_SPEED);
+        } else {
+            sparkA.set(Constants.SHOOTER_UPPER_SPEED);
+            sparkB.set(-Constants.SHOOTER_UPPER_SPEED);
+        }
+        sparkA.getPIDController().setReference(low_sped, ControlType.kVelocity);
     }
 
     /**

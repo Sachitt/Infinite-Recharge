@@ -86,19 +86,23 @@ public class Pivot {
             switch (Robot.operatorController.getPOV()) {
                 case 0:
                     // Up
-                    setAgainst();
+                    //setAgainst();
+                    setGreen();
                     break;
                 case 90:
                     // Right
-                    setWheel();
+                    //setWheel();
+                    setYellow();
                     break;
                 case 180:
                     // Down
-                    setTrench();
+                    //setTrench();
+                    setRed();
                     break;
                 case 270:
                     // Left
-                    setLine();
+                    //setLine();
+                    setBlue();
                     break;
                 default:
                     // Catches -1 or status when nothing is pressed on DPad
@@ -152,6 +156,22 @@ public class Pivot {
         }
     }
 
+    public void setGreen(){
+        setRevolution(Constants.GREEN_ZONE);
+    }
+
+    public void setYellow(){
+        setRevolution(Constants.YELLOW_ZONE);
+    }
+
+    public void setBlue(){
+        setRevolution(Constants.BLUE_ZONE);
+    }
+
+    public void setRed(){
+        setRevolution(Constants.RED_ZONE);
+    }
+//------------------------------------------------------
     public void setAgainst() {
         setRevolution(79);
     }
