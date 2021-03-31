@@ -73,6 +73,7 @@ public class Pivot {
        
         workShuffleBoard();
         if (Math.abs(Robot.operatorController.getY(Hand.kLeft)) > Constants.TRIGGER_THRESHOLD) {
+            System.out.println("Current angle: " + getRevolution());
             teleopRun();
         } else if (Robot.operatorController.getStickButton(Hand.kRight)) {
             align();
@@ -115,6 +116,10 @@ public class Pivot {
         return 1.98 * angle - 51.7;
     }
 
+    private double revToAngle(double rev){
+        return (rev+51.7)/1.98;
+    }
+
     public void stop() {
         sparkA.set(0);
     }
@@ -144,6 +149,9 @@ public class Pivot {
 
     public void align() {
         double theta_val = alignment.get_theta();
+        setRevolution((angleToRev(theta_val)));
+        Constants.whichSpeed = 0;
+        /*
         if(theta_val >= 20) {
             setRevolution((angleToRev(theta_val)));
         } else {
@@ -151,25 +159,32 @@ public class Pivot {
             Shooter.shooterTarget = Constants.SHOOTER_SLOW_TARGET_RPM;
             double second_theta_val = alignment.get_second_theta();
             setRevolution(angleToRev(second_theta_val));
-            
-            
         }
+        */
     }
 
     public void setGreen(){
-        setRevolution(Constants.GREEN_ZONE);
+        setRevolution(48.61);
+        Constants.whichSpeed = 2;
+        System.out.println("Position: Green, Rev: " + getRevolution());
     }
 
     public void setYellow(){
         setRevolution(Constants.YELLOW_ZONE);
+        Constants.whichSpeed = 0;
+        System.out.println("Position: Yellow, Rev: " + getRevolution());
     }
 
     public void setBlue(){
-        setRevolution(Constants.BLUE_ZONE);
+        setRevolution(2.5);
+        Constants.whichSpeed = 0;
+        System.out.println("Position: Blue, Rev: " + getRevolution());
     }
 
     public void setRed(){
         setRevolution(Constants.RED_ZONE);
+        Constants.whichSpeed = 1;
+        System.out.println("Position: Red");
     }
 //------------------------------------------------------
     public void setAgainst() {

@@ -93,7 +93,7 @@ public class DriveTrain {
             reset();
         }
 
-        System.out.println(mGyro.getRotation2d());
+        //System.out.println(mGyro.getRotation2d());
     }
 
     public void resetGyro() {

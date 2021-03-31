@@ -70,6 +70,8 @@ public class Intake {
         } else if (Robot.operatorController.getTriggerAxis(Hand.kLeft) >= Constants.TRIGGER_THRESHOLD
                 || Robot.operatorController.getTriggerAxis(Hand.kRight) >= Constants.TRIGGER_THRESHOLD) {
             tubeShoot();
+        } else if (Robot.operatorController.getStartButton() || Robot.operatorController.getBackButton()){
+            tubeShoot();
         } else if (Robot.operatorController.getBButton()) {
             tubeReverse();
         } else {
