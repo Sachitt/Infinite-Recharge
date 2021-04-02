@@ -4,11 +4,30 @@
 
 package frc.robot;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.DriveTrain.TankValue;
+import org.json.*;
+import org.json.simple.parser.JSONParser;
+import java.io.*;
+import java.util.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -23,7 +42,11 @@ public class Robot extends TimedRobot {
 
   private List<TankValue> tankValues;
   private int i;
+  public String fileName = "/tankvals.json";
 
+  JSONObject jsonObject;
+  ObjectMapper mapper = new ObjectMapper();
+  
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -61,8 +84,25 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    // TODO Determine a way to make this List<TankValue> from prerecorded
+    
+    
+
+    FileReader reader = new FileReader(Filesystem.getDeployDirectory() + fileName);
+    JSONParser jsonParser = new JSONParser();
+    jsonObject = (JSONObject) jsonParser.parse(reader);
+    System.out.println(jsonObject);
+  
+  
+
+
+
+
     tankValues = new ArrayList<TankValue>();
+    // tankValues = mapper.readValue(Paths.get("src/main/deploy/tankvals.json"), TankValue.class);
+    
+
+    
+
   }
 
   /** This function is called periodically during autonomous. */

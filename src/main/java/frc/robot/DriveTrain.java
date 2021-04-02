@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.json.*;
+import java.io.FileWriter;
+ 
 /**
  * Modified basic tank drive drivetrain for recording
  */
@@ -31,6 +34,10 @@ public class DriveTrain {
     private boolean toggle, active, record;
 
     private double lSpeed, rSpeed;
+
+    public JSONObject jsonObj;
+
+    // FileWriter file = new FileWriter("src/main/deploy/tankvals.json");
 
     /**
      * Class that manages setting and getting of four tank value lists
@@ -97,6 +104,12 @@ public class DriveTrain {
         public double getR() {
             return mR;
         }
+
+        @Override
+        public String toString() {
+            return "{mL: " + mL + ", mR:" + mR + "}";
+        }
+    
     }
 
     public DriveTrain() {
@@ -117,6 +130,8 @@ public class DriveTrain {
         i = j = 0;
 
         invert = toggle = active = record = false;
+
+        jsonObj = new JSONObject();
     }
 
     public void run() {
@@ -128,7 +143,6 @@ public class DriveTrain {
 
         // Reset flags
         active = false;
-        record = false;
 
         if (Constants.driveController.getPOV() != -1) {
             // Cache which dpad was pressed for recording
@@ -161,6 +175,16 @@ public class DriveTrain {
                 if (toggle) {
                     // update the map value and turn off recording
                     map.set(i, recording);
+                    
+                    System.out.println("WORKING HERE");
+                    for(int x=0; x<recording.size(); x++) {
+                        System.out.print(recording.get(x).toString());
+                    }
+                    System.out.println(recording.size() + " < Rec size??");
+                    //System.out.println(recording);
+
+                    //buildJsonFile(recording);
+
                     record = false;
                 } else {
                     // Reset recording arraylist and turn on functionality
@@ -184,6 +208,22 @@ public class DriveTrain {
 
         tankDrive(lSpeed, rSpeed);
     }
+
+    // private void buildJsonFile(ArrayList<TankValue> infolist) {
+    //     for (int z = 0; z<infolist.size(); z++) {
+    //         JSONObject tempObj = new JSONObject();
+    //         tempObj.put("mL", infolist.get(z).getL());
+    //         tempObj.put("mR", infolist.get(z).getR());
+
+    //         JSONArray tempArray = new JSONArray();
+    //         tempArray.put(tempObj);
+
+    //         jsonObj.put("tankvalues", tempArray);
+    //     }
+
+    //     file.write(jsonObj.toJSONString());
+    //     file.close();
+    // }
 
     private void setSpeeds() {
         // constants to easily configure if drive is opposite
