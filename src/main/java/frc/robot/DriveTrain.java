@@ -107,8 +107,9 @@ public class DriveTrain {
 
         @Override
         public String toString() {
-            return "{mL: " + mL + ", mR:" + mR + "}";
-        }
+            // return "{mL: " + mL + ", mR:" + mR + "}";
+            return mL + "!" + mR;
+            }
     
     }
 
@@ -178,7 +179,7 @@ public class DriveTrain {
                     
                     System.out.println("WORKING HERE");
                     for(int x=0; x<recording.size(); x++) {
-                        System.out.print(recording.get(x).toString());
+                        System.out.println("tankValues.add(\"" + recording.get(x).toString() + "\")");
                     }
                     System.out.println(recording.size() + " < Rec size??");
                     //System.out.println(recording);

@@ -40,9 +40,12 @@ public class Robot extends TimedRobot {
   private DriveTrain drive;
   private Intake intake;
 
-  private List<TankValue> tankValues;
+  private List<TankValue> tankValue = new ArrayList<TankValue>();
+  private List<String> tankValuesString = new ArrayList<String>();
   private int i;
   public String fileName = "/tankvals.json";
+
+  public static List<String> tankValues = new ArrayList<String>();
 
   JSONObject jsonObject;
   ObjectMapper mapper = new ObjectMapper();
@@ -55,6 +58,191 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     drive = new DriveTrain();
     intake = new Intake();
+    
+    
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!-1.1435399445543137E-4");
+    tankValues.add("-3.982037371533506E-4!-0.0020720362410402153");
+    tankValues.add("-0.0037968882170629813!-0.025124957255636696");
+    tankValues.add("-0.07977408521548603!-0.5493292248547015");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.018752508720997554!-0.10386427421437142");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("-0.01322153270454638!-0.016813855400741644");
+    tankValues.add("-0.01322153270454638!-0.016813855400741644");
+    tankValues.add("-0.08359256306506152!-0.5228945471659053");
+    tankValues.add("-0.31154757042386644!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.7!-0.7");
+    tankValues.add("-0.09146654454281344!-0.08359256306506152");
+    tankValues.add("-0.0013866259507418844!0.0");
+    tankValues.add("1.1275092010998849E-4!0.005885137466266466");
+    tankValues.add("1.1275092010998849E-4!0.020493238945333586");
+    tankValues.add("0.009877484060721586!0.09418219706445977");
+    tankValues.add("0.06438462126095093!0.17897498938778977");
+    tankValues.add("0.7!0.7");
+    tankValues.add("0.7!0.7");
+    tankValues.add("0.7!0.7");
+    tankValues.add("0.7!0.7");
+    tankValues.add("0.7!0.7");
+    tankValues.add("0.7!0.7");
+    tankValues.add("0.7!0.7");
+    tankValues.add("0.7!0.7");
+    tankValues.add("0.7!0.7");
+    tankValues.add("0.7!0.7");
+    tankValues.add("0.7!0.7");
+    tankValues.add("0.7!0.7");
+    tankValues.add("0.7!0.7");
+    tankValues.add("0.7!0.7");
+    tankValues.add("0.7!0.7");
+    tankValues.add("0.7!0.7");
+    tankValues.add("0.7!0.3421506007632024");
+    tankValues.add("0.7!0.0013671874999999997");
+    tankValues.add("0.7!-0.31154757042386644");
+    tankValues.add("0.7!-0.603928986471218");
+    tankValues.add("0.7!-0.6511770002995723");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("0.7!-0.7");
+    tankValues.add("-0.1354807632385433!-0.7");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    tankValues.add("0.0!0.0");
+    
+    
+
+
+
   }
 
   /**
@@ -68,6 +256,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    for (int i = 0; i<tankValues.size(); i++) {
+      System.out.println(tankValues.get(i));
+    }
   }
 
   /**
@@ -86,22 +277,17 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     
     
-
-    FileReader reader = new FileReader(Filesystem.getDeployDirectory() + fileName);
-    JSONParser jsonParser = new JSONParser();
-    jsonObject = (JSONObject) jsonParser.parse(reader);
-    System.out.println(jsonObject);
-  
-  
-
-
-
-
-    tankValues = new ArrayList<TankValue>();
-    // tankValues = mapper.readValue(Paths.get("src/main/deploy/tankvals.json"), TankValue.class);
-    
-
-    
+    // FileReader reader;
+    // try {
+    //   reader = new FileReader("src/main/java/frc/robot/tankvals.json");
+    // } catch (FileNotFoundException e) {
+    //   e.printStackTrace();
+    // }
+    // JSONParser jsonParser = new JSONParser();
+    // jsonObject = (JSONObject) jsonParser.parse(reader);
+    // System.out.println(jsonObject);
+    // tankValues = new ArrayList<TankValue>();
+    // // tankValues = mapper.readValue(Paths.get("src/main/deploy/tankvals.json"), TankValue.class);
 
   }
 
@@ -115,8 +301,8 @@ public class Robot extends TimedRobot {
 
     // Iterate over tankValues until all motor values are set. Then stop until
     // autonomous is disabled
-    if (i < tankValues.size() - 1) {
-      drive.tankDrive(tankValues.get(i).getL(), tankValues.get(i).getR());
+    if (i < tankValue.size() - 1) {
+      drive.tankDrive(tankValue.get(i).getL(), tankValue.get(i).getR());
     } else {
       drive.stop();
     }
