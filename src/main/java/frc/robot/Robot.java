@@ -275,6 +275,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    i = 0;
     
     
     // FileReader reader;
