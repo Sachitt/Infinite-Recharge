@@ -52,7 +52,7 @@ public class Constants {
     public static double SHOOTER_LOWER_SPEED = 0.7;
     public static double SHOOTER_UPPER_SPEED = 0.9;
     public static double SHOOTER_TARGET_RPM = 4500;
-    public static double SHOOTER_SLOW_TARGET_RPM = 2500;
+    public static double SHOOTER_SLOW_TARGET_RPM = 3000;
 
     public static double SHOOTER_THRESHOLD_RPM = 100;
 
@@ -127,10 +127,12 @@ public class Constants {
     public static final double LLH = 0.381;
 
     //accuracy values
-    public static final double GREEN_ZONE = 67;
+    public static final double GREEN_ZONE = 48.8;  //in revolutions
     public static final double YELLOW_ZONE = 31;
-    public static final double BLUE_ZONE = 30;
+    public static final double BLUE_ZONE = 2.5;     //in revolutions
     public static final double RED_ZONE = 30;
     public static final double SHOOTER_LOWEST_RPM = 1500;
+    public static final double SHOOTER_LOW_SPEED = 0.43;
+    public static final double INTAKE_SLOW_SHOOT = 0.75;
     public static int whichSpeed = 0;
 }

@@ -74,6 +74,7 @@ public class Intake {
             tubeShoot();
         } else if (Robot.operatorController.getBButton()) {
             tubeReverse();
+            Robot.shooter.toshkoOpen();
         } else {
             tubeOff();
         }
@@ -104,6 +105,11 @@ public class Intake {
     public void tubeShoot() {
         sparkC.set(Constants.INTAKE_SHOOT_SPEED);
         sparkD.set(-Constants.INTAKE_SHOOT_SPEED);
+    }
+
+    public void slowShoot() {
+        sparkC.set(Constants.INTAKE_SLOW_SHOOT);
+        sparkD.set(-Constants.INTAKE_SLOW_SHOOT);
     }
 
     public void tubeReverse() {

@@ -164,7 +164,7 @@ public class Pivot {
     }
 
     public void setGreen(){
-        setRevolution(48.61);
+        setRevolution(Constants.GREEN_ZONE);
         Constants.whichSpeed = 2;
         System.out.println("Position: Green, Rev: " + getRevolution());
     }
@@ -176,7 +176,7 @@ public class Pivot {
     }
 
     public void setBlue(){
-        setRevolution(2.5);
+        setRevolution(Constants.BLUE_ZONE);
         Constants.whichSpeed = 0;
         System.out.println("Position: Blue, Rev: " + getRevolution());
     }
