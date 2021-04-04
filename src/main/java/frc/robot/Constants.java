@@ -35,4 +35,7 @@ public class Constants {
     // Tube Constants
     public static final double kTubeIntakeSpeed = 0.7;
     public static final double kTubeShootSpeed = 1;
+
+    // LimeLight
+    public static final LimeLight kBackLL = new LimeLight("limelight-intake");
 }

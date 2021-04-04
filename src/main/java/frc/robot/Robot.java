@@ -277,6 +277,20 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     i = 0;
     
+    if (Constants.kBackLL.getTx() < 0) {
+      if (Constants.kBackLL.getTy() < 0) {
+        // System.out.println("br");
+      } else {
+        // System.out.println("bb");
+      }
+    } else {
+      if (Constants.kBackLL.getTy() < 0) {
+        // System.out.println("ar");
+      } else {
+        // System.out.println("ab");
+      }
+    }
+    
     
     // FileReader reader;
     // try {
