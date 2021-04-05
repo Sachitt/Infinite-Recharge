@@ -94,7 +94,7 @@ public class Shooter {
         //System.out.println("Current RPM: " + getRPM());
 
         if (Robot.operatorController.getXButton()) {
-            System.out.println("Yo here mr white");
+            //System.out.println("Yo here mr white");
             open();
         } else {
             close();
@@ -211,21 +211,22 @@ public class Shooter {
     
     public void lowSpeed(){
         //back button
-        sparkA.getPIDController().setReference(Constants.SHOOTER_SLOW_TARGET_RPM, ControlType.kVelocity);
+        //sparkA.getPIDController().setReference(Constants.SHOOTER_WEIRD_LOW, ControlType.kVelocity);
+        sparkA.set(Constants.SHOOTER_WEIRD_LOW);
         if (Robot.operatorController.getXButton()) {
-            open();
+            toshkoOpen();
         } else {
             close();
         }
         System.out.println("RPM: " + getRPM());
-        System.out.println("Speed: Low");
+        System.out.println("Speed: Weird Low");
     }
 
     public void altLowSpeed(){
         //start button
         sparkA.set(Constants.SHOOTER_LOW_SPEED);
         if (Robot.operatorController.getXButton()) {
-            System.out.println("IT's here");
+            //System.out.println("IT's here");
             toshkoOpen();
         } else {
             close();

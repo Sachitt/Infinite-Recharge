@@ -133,6 +133,7 @@ public class Constants {
     public static final double RED_ZONE = 30;
     public static final double SHOOTER_LOWEST_RPM = 1500;
     public static final double SHOOTER_LOW_SPEED = 0.43;
+    public static final double SHOOTER_WEIRD_LOW = 0.45;
     public static final double INTAKE_SLOW_SHOOT = 0.75;
     public static int whichSpeed = 0;
 }
