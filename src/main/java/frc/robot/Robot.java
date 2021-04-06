@@ -130,7 +130,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    climb.run();
+    //climb.run();
     drivetrain.run();
     pivot.run();
     shooter.run();
