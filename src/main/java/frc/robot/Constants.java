@@ -78,7 +78,7 @@ public class Constants {
     public static double PIVOT_AUTO_SPEED = 0.2;
     public static double PIVOT_ZERO_SPEED = 0.1;
 
-    public static double PIVOT_ZERO_THRESHOLD = 5;
+    public static double PIVOT_ZERO_THRESHOLD = 0;
     public static double PIVOT_MAX_REVOLUTION = 83;
     public static double PIVOT_THRESHOLD = 1;
 

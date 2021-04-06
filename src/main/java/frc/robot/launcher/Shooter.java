@@ -65,7 +65,9 @@ public class Shooter {
     }
 
     public double getRPM() {
-        return sparkA.getEncoder().getVelocity();
+        //System.out.println("A" + sparkA.getEncoder().getVelocity() + ", B" + sparkB.getEncoder().getVelocity());
+        return sparkA.getEncoder().getVelocity() - sparkB.getEncoder().getVelocity();
+
     }
 
     /**
@@ -75,6 +77,7 @@ public class Shooter {
         //System.out.println(shooterTarget);
         // System.out.println(getRPM());
         if (Robot.operatorController.getTriggerAxis(Hand.kRight) >= Constants.TRIGGER_THRESHOLD) {
+            //System.out.println("Trying to shoot");
             shoot();
         } else if (Robot.operatorController.getStartButton()) {
             //turn();
@@ -113,7 +116,7 @@ public class Shooter {
     }
 
     public void workShuffleBoard() {
-        SmartDashboard.putNumber("ShooterRPM", getRPM());
+        SmartDashboard.putNumber("ShooterRPM", getRPM()/100);
     }
     public void shoot() {
         if (startTime == 0) {
@@ -173,8 +176,11 @@ public class Shooter {
             sped = Constants.SHOOTER_SLOW_TARGET_RPM; //low speed, left side
         }
         */
+        int n =0;
+        System.out.println("Target rpm:  "+ Constants.SHOOTER_TARGET_RPM);
         sparkA.getPIDController().setReference(Constants.SHOOTER_TARGET_RPM, ControlType.kVelocity);
-        System.out.println("RPM: " + getRPM());
+        sparkB.getPIDController().setReference(Constants.SHOOTER_TARGET_RPM, ControlType.kVelocity);
+        getRPM();
         //System.out.println("Speed: Top");
         //---------------------------------------
         /*
