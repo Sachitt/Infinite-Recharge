@@ -70,14 +70,14 @@ public class Pivot {
 
     public void run() {
         // System.out.println(getRevolution());
-       
+        System.out.println("Current angle: " + getRevolution());
         workShuffleBoard();
         if (Math.abs(Robot.operatorController.getY(Hand.kLeft)) > Constants.TRIGGER_THRESHOLD) {
-            System.out.println("Current angle: " + getRevolution());
+            //System.out.println("Current angle: " + getRevolution());
             teleopRun();
         } else if (Robot.operatorController.getStickButton(Hand.kRight)) {
             align();
-        } else if (Robot.operatorController.getXButton()) {
+        } else if (Robot.operatorController.getYButton()) {
             callibrate();
         }  else if (Robot.operatorController.getStickButton(Hand.kLeft)) {
             reset();
@@ -132,18 +132,22 @@ public class Pivot {
         // Prevent pivot to go below the lowerLimit switch
         if (!lowerLimit.get() && Robot.operatorController.getY(Hand.kLeft) > 0) {
             callibrate();
+            System.out.println("Here 1");
             return;
         }
 
         if (getRevolution() < Constants.PIVOT_ZERO_THRESHOLD && Robot.operatorController.getY(Hand.kLeft) > 0) {
             sparkA.set(Robot.operatorController.getY(Hand.kLeft) * Constants.PIVOT_ZERO_SPEED);
+            System.out.println("Here 2");
             return;
         }
 
         if (getRevolution() > Constants.PIVOT_MAX_REVOLUTION && Robot.operatorController.getY(Hand.kLeft) < 0) {
+            System.out.println("Here 3");
             return;
 
         }
+        System.out.println("Here 4");
         sparkA.set(Robot.operatorController.getY(Hand.kLeft) * Constants.PIVOT_TELEOP_SPEED);
     }
 

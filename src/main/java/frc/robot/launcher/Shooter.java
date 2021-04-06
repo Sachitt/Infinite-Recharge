@@ -218,8 +218,8 @@ public class Shooter {
         } else {
             close();
         }
-        System.out.println("RPM: " + getRPM());
-        System.out.println("Speed: Weird Low");
+        //System.out.println("RPM: " + getRPM());
+        //System.out.println("Speed: Weird Low");
     }
 
     public void altLowSpeed(){
@@ -231,8 +231,8 @@ public class Shooter {
         } else {
             close();
         }
-        System.out.println("RPM: " + getRPM());
-        System.out.println("Speed: Alternate Low");
+        //System.out.println("RPM: " + getRPM());
+        //System.out.println("Speed: Alternate Low");
     }
     
     /**

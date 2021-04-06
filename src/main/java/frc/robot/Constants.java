@@ -74,7 +74,7 @@ public class Constants {
     public static double INTAKE_SHOOT_SPEED = 1;
 
     // Pivot Constants
-    public static double PIVOT_TELEOP_SPEED = 0.25;
+    public static double PIVOT_TELEOP_SPEED = 0.15;
     public static double PIVOT_AUTO_SPEED = 0.2;
     public static double PIVOT_ZERO_SPEED = 0.1;
 
@@ -127,7 +127,7 @@ public class Constants {
     public static final double LLH = 0.381;
 
     //accuracy values
-    public static final double GREEN_ZONE = 48.8;  //in revolutions
+    public static final double GREEN_ZONE = 52.25;  //in revolutions
     public static final double YELLOW_ZONE = 31;
     public static final double BLUE_ZONE = 2.5;     //in revolutions
     public static final double RED_ZONE = 30;
