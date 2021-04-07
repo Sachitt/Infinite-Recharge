@@ -178,9 +178,12 @@ public class Shooter {
         */
         int n =0;
         System.out.println("Target rpm:  "+ Constants.SHOOTER_TARGET_RPM);
-        sparkA.getPIDController().setReference(Constants.SHOOTER_TARGET_RPM, ControlType.kVelocity);
-        sparkB.getPIDController().setReference(Constants.SHOOTER_TARGET_RPM, ControlType.kVelocity);
-        getRPM();
+        //sparkA.getPIDController().setReference(Constants.SHOOTER_TARGET_RPM, ControlType.kVelocity);
+        //sparkB.getPIDController().setReference(Constants.SHOOTER_TARGET_RPM, ControlType.kVelocity);
+        //getRPM();
+        sparkA.set(0.9);
+
+
         //System.out.println("Speed: Top");
         //---------------------------------------
         /*
