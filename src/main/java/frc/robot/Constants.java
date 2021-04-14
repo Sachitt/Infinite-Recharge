@@ -39,8 +39,4 @@ public class Constants {
 
     // LimeLight
     public static final LimeLight kBackLL = new LimeLight("limelight-intake");
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 2a8d4f38fa47d89597fc12bf6dc06f3ed33a5c19

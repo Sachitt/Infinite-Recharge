@@ -64,22 +64,26 @@ public class Robot extends TimedRobot {
     drive = new DriveTrain();
     intake = new Intake();
 
-    
+    pathName = "Barrel";
 
-    pathName = drive.evaluatePath();
-    System.out.println(pathName);
+    if(pathName == "Slalom") {
+      tankVals = drive.buildSlalom();
+    } else if(pathName == "Barrel") {
+      tankVals = drive.buildBarrel();
+    } else if(pathName == "Bounce") {
+      tankVals = drive.buildBounce();
+    }
 
-    // pathName = "BBLUE";
-    
-      if(pathName == "ARED") {
-        tankVals = drive.buildARED();
-      } else if (pathName == "ABLUE") {
-        tankVals = drive.buildABLUE();
-      } else if (pathName == "BRED") {
-        tankVals = drive.buildBRED();
-      } else if (pathName == "BBLUE") {
-        tankVals = drive.buildBBLUE();
-      }
+    // pathName = drive.evaluatePath();
+    //   if(pathName == "ARED") {
+    //     tankVals = drive.buildARED();
+    //   } else if (pathName == "ABLUE") {
+    //     tankVals = drive.buildABLUE();
+    //   } else if (pathName == "BRED") {
+    //     tankVals = drive.buildBRED();
+    //   } else if (pathName == "BBLUE") {
+    //     tankVals = drive.buildBBLUE();
+    //   }
 
 
   }
@@ -112,31 +116,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-<<<<<<< HEAD
 
 
       
       
 
     }
-=======
-    i = 0;
-    
-    if (Constants.kBackLL.getTx() < 0) {
-      if (Constants.kBackLL.getTy() < 0) {
-        // System.out.println("br");
-      } else {
-        // System.out.println("bb");
-      }
-    } else {
-      if (Constants.kBackLL.getTy() < 0) {
-        // System.out.println("ar");
-      } else {
-        // System.out.println("ab");
-      }
-    }
-    
->>>>>>> 2a8d4f38fa47d89597fc12bf6dc06f3ed33a5c19
     
     // FileReader reader;
     // try {
@@ -156,9 +141,9 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     // Run intake and tube
-    intake.intakeDown();
-    intake.tubeIntake();
-    intake.intake();
+    // intake.intakeDown();
+    // intake.tubeIntake();
+    // intake.intake();
 
     
 
