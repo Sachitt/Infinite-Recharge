@@ -1,6 +1,8 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+//COPIED CONSTANTS
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Constants {
     // USB Ports
@@ -28,7 +30,8 @@ public class Constants {
 
     // LimeLight Constants
     public static double MOUNTING_HEIGHT = 0.4191; // Meters
-    public static double MOUNTING_ANGLE = 0.5759; // Radians
+    public static double MOUNTING_ANGLE = 0.69; // Radians
+    public static double REFRENCE_HEIGHT = 0.249; // Meters
 
     // Motor Constants
     public static int NEO_MAX_CURRENT = 45;
@@ -40,20 +43,18 @@ public class Constants {
     // Drivetrain Constants
     public static double DRIVE_SLOW_POWER = 0.4;
     public static double DRIVE_REGULAR_POWER = 0.7;
-    public static double DRIVE_TURBO_POWER = 0.95;
+    public static double DRIVE_TURBO_POWER = 0.9;
 
-    public static float DRIVE_KP = 0.28f;
-    public static float DRIVE_KI = 0f;
-    public static float DRIVE_KD = 0.055f;
-    public static double DRIVE_MAX_ROTATION_SPEED = 0.23;
-    public static double DRIVE_ROTATION_TOLERANCE = 0.5;
+    public static float DRIVE_KP = 0.08f;
+    public static float DRIVE_KI = 0;
+    public static float DRIVE_KD = 0.04f;
+    public static double DRIVE_MAX_ROTATION_SPEED = 0.2;
+    public static double DRIVE_ROTATION_TOLERANCE = 5;
 
     // Shooter Constants
     public static double SHOOTER_LOWER_SPEED = 0.7;
     public static double SHOOTER_UPPER_SPEED = 0.9;
     public static double SHOOTER_TARGET_RPM = 4500;
-    public static double SHOOTER_SLOW_TARGET_RPM = 3500;
-
     public static double SHOOTER_THRESHOLD_RPM = 100;
 
     public static double SHOOTER_TURN_SPEED = 0.2;
@@ -82,12 +83,7 @@ public class Constants {
     public static double PIVOT_MAX_REVOLUTION = 83;
     public static double PIVOT_THRESHOLD = 1;
 
-    public static double PIVOT_KP = 0.6;
-    public static double PIVOT_KI = 0;
-    public static double PIVOT_KD = 4;
-    public static double PIVOT_KF = 0;
-
-    public static double RADIANS_TO_REV = 1/2.01; // NEED TO GET
+    public static double RADIANS_TO_REV = 10; // NEED TO GET
 
     // Auto Constants
     public static double AUTO_SHOOT_TIME = 2000;
@@ -111,20 +107,4 @@ public class Constants {
     public static final int ENCODER_REV = 42;// temporary
 
     public static final int WHEEL_REV = 7;
-
-    //General Robot
-    
-    //public static double V = 32;        //The exit velocity of the ball from the tube in the direction in which the tube is pointing
-    public static double V = 30.48;
-    public static double V2 = 23.7;
-    public static double HP = 2.49555;      //The height (from the ground) of the point within the port where we wish to shoot
-    //public static double HP = 2.1636;
-    public static double HP_DIST = 2.1425;
-    public static double LLPIV = 0.7408926;   //The horizontal distance from the pivot point of the tube to the limelight
-    public static double LT = 0.861401122;      //The length of the tube from the pivot point to the exit point
-    public static double HPIV = 0.1676908;    //The height of the pivot point of the tube off the ground
-    public static double G = 9.81;       //gravitational acceleration constant
-    public static double LLH = 0.381;
-
-
 }

@@ -12,44 +12,33 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.Constants;
 import frc.robot.Robot;
 
-/**
- * Class that handles the intake mechanism and the tube intake
- * 
- * <p>
- * Note: intake pneumatics should default to the upward position
- * </p>
- * 
- * @author Ryan Chaiyakul
- */
 public class Intake {
-    private CANSparkMax sparkA, sparkB, sparkC, sparkD;
-    private DoubleSolenoid intakeSolenoid;
+    private CANSparkMax sparkB, sparkC, sparkD;
+    private DoubleSolenoid Solenoid;
 
     private boolean intake;
 
     public Intake() {
-        // Intialize motors
-        sparkA = new CANSparkMax(Constants.INTAKE_PORTS[0], MotorType.kBrushless);
+        
         sparkB = new CANSparkMax(Constants.INTAKE_PORTS[1], MotorType.kBrushless);
         sparkC = new CANSparkMax(Constants.INTAKE_PORTS[2], MotorType.kBrushless);
         sparkD = new CANSparkMax(Constants.INTAKE_PORTS[3], MotorType.kBrushless);
 
-        ArrayList<CANSparkMax> shooterSparkMax = new ArrayList<CANSparkMax>() {
+        ArrayList<CANSparkMax> shooter = new ArrayList<CANSparkMax>() {
             {
-                add(sparkA);
                 add(sparkB);
                 add(sparkC);
                 add(sparkD);
             }
         };
 
-        for (CANSparkMax spark : shooterSparkMax) {
+        for (CANSparkMax spark : shooter) {
             spark.setSmartCurrentLimit(35);
             spark.setSecondaryCurrentLimit(35);
             spark.setIdleMode(IdleMode.kBrake);
         }
 
-        intakeSolenoid = new DoubleSolenoid(Constants.PNEUMATIC_INTAKE_PORT[0], Constants.PNEUMATIC_INTAKE_PORT[1]);
+        Solenoid = new DoubleSolenoid(Constants.PNEUMATIC_INTAKE_PORT[0], Constants.PNEUMATIC_INTAKE_PORT[1]);
 
         intake = false;
     }
@@ -65,6 +54,14 @@ public class Intake {
             intakeUp();
         }
 
+       
+        if (Robot.operatorController.getTriggerAxis(Hand.kLeft) >= Constants.TRIGGER_THRESHOLD) {
+            intake();
+        } else if (Robot.operatorController.getBumper(Hand.kRight)) {
+            Reverse();
+        } else {
+            Off();
+        }
         if (Robot.operatorController.getBumper(Hand.kLeft)) {
             tubeIntake();
         } else if (Robot.operatorController.getTriggerAxis(Hand.kLeft) >= Constants.TRIGGER_THRESHOLD
@@ -76,22 +73,14 @@ public class Intake {
             tubeOff();
         }
 
-        if (Robot.operatorController.getTriggerAxis(Hand.kLeft) >= Constants.TRIGGER_THRESHOLD) {
-            intake();
-        } else if (Robot.operatorController.getBumper(Hand.kRight)) {
-            intakeReverse();
-        } else {
-            intakeOff();
-        }
-
     }
 
     public void intakeDown() {
-        intakeSolenoid.set(Value.kForward);
+        Solenoid.set(Value.kForward);
     }
 
     public void intakeUp() {
-        intakeSolenoid.set(Value.kReverse);
+        Solenoid.set(Value.kReverse);
     }
 
     public void tubeIntake() {
@@ -115,17 +104,14 @@ public class Intake {
     }
 
     public void intake() {
-        sparkA.set(Constants.INTAKE_INTAKE_SPEED);
         sparkB.set(-Constants.INTAKE_INTAKE_SPEED);
     }
 
-    public void intakeReverse() {
-        sparkA.set(-Constants.INTAKE_INTAKE_SPEED);
+    public void Reverse() {
         sparkB.set(Constants.INTAKE_INTAKE_SPEED);
     }
 
-    public void intakeOff() {
-        sparkA.set(0);
+    public void Off() {
         sparkB.set(0);
     }
 }
