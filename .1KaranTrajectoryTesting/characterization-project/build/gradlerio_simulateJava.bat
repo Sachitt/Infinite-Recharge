@@ -1,0 +1,6 @@
+@echo off
+setlocal
+set HALSIM_EXTENSIONS=C:\Users\Karan\Desktop\FRC Software\FRC Code\TrajectoryGeneration2.0-main\TrajectoryGenerationCode\characterization-project\build\tmp\expandedArchives\halsim_gui-2021.1.2-windowsx86-64.zip_a65f029882460810c7d9fdb675bf2f07\windows\x86-64\shared\halsim_gui.dll
+set PATH=C:\Users\Public\wpilib\2021\jdk\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Users\Karan\AppData\Local\Programs\Python\Python39\Scripts\;C:\Users\Karan\AppData\Local\Programs\Python\Python39\;C:\Users\Karan\AppData\Local\Microsoft\WindowsApps;;C:\Users\Karan\Desktop\FRC Software\FRC Code\TrajectoryGeneration2.0-main\TrajectoryGenerationCode\characterization-project\build\tmp\jniExtractDir
+"C:\Users\Public\wpilib\2021\jdk\bin\java.exe" -Djava.library.path="C:\Users\Karan\Desktop\FRC Software\FRC Code\TrajectoryGeneration2.0-main\TrajectoryGenerationCode\characterization-project\build\tmp\jniExtractDir" -jar "C:\Users\Karan\Desktop\FRC Software\FRC Code\TrajectoryGeneration2.0-main\TrajectoryGenerationCode\characterization-project\build\libs\characterization-project.jar"
+endlocal
