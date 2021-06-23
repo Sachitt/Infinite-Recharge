@@ -1,6 +1,6 @@
 package frc.robot.launcher;
 
-import java.util.ArrayList;
+import java.lang.annotation.Target;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
@@ -10,93 +10,132 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+//import frc.robot.Constants;
 import frc.robot.Robot;
 
-
 public class Shooter {
-    private CANSparkMax sparkA, sparkB; 
-    private DoubleSolenoid shooterSolenoid; 
-    private double Time; 
+
+    CANSparkMax spark1, spark2;
+    DoubleSolenoid shooterLock;
+    double Time;
+    public static boolean pneumaticCheckS = false;
 
     public Shooter() {
-        sparkA = new CANSparkMax(Constants.SHOOTER_PORTS[0], MotorType.kBrushless);
-        sparkB = new CANSparkMax(Constants.SHOOTER_PORTS[1], MotorType.kBrushless);
 
-        ArrayList<CANSparkMax> shooterSparkMax = new ArrayList<CANSparkMax>() {
-            {
-                add(sparkA);
-                add(sparkB);
-            }
-        };
+        spark1 = new CANSparkMax(1, MotorType.kBrushless);
+        spark2 = new CANSparkMax(2, MotorType.kBrushless);
 
-        for (CANSparkMax spark : shooterSparkMax) {
-            spark.setSmartCurrentLimit(Constants.NEO_MAX_CURRENT);
-            spark.setSecondaryCurrentLimit(Constants.NEO_MAX_CURRENT);
-            spark.setIdleMode(IdleMode.kCoast); 
-        }
+        spark1.setSmartCurrentLimit(45);
+        spark1.setSecondaryCurrentLimit(45);
+        spark1.setIdleMode(IdleMode.kCoast);
 
-        shooterSolenoid = new DoubleSolenoid(Constants.PNEUMATIC_SHOOTER_PORT[0], Constants.PNEUMATIC_SHOOTER_PORT[1]);
+        spark2.setSmartCurrentLimit(45);
+        spark2.setSecondaryCurrentLimit(45);
+        spark2.setIdleMode(IdleMode.kCoast);
+
+        shooterLock = new DoubleSolenoid(1, 0);
+
         Time = 0;
 
-        sparkA.getPIDController().setP(Constants.SHOOTER_KP);
-        sparkA.getPIDController().setI(Constants.SHOOTER_KI);
-        sparkA.getPIDController().setD(Constants.SHOOTER_KD);
-        sparkA.getPIDController().setFF(Constants.SHOOTER_KF);
-        sparkB.follow(sparkA, true);
+        spark1.getPIDController().setP(Constants.SHOOTER_KP);
+        spark1.getPIDController().setP(Constants.SHOOTER_KI);
+        spark1.getPIDController().setP(Constants.SHOOTER_KD);
+        spark1.getPIDController().setP(Constants.SHOOTER_KF);
+        spark2.follow(spark1, true);
+
     }
 
-    public double getRPM() {
-        return sparkA.getEncoder().getVelocity();
+    public double RPM() {
+        // return spark1.getVelocity
+        return spark1.getEncoder().getVelocity();
     }
-
 
     public void run() {
-        if (Robot.operatorController.getTriggerAxis(Hand.kRight) >= Constants.TRIGGER_THRESHOLD) {
+        if (Robot.operatorController.getTriggerAxis(Hand.kRight) >= 0.2) {
+
             shoot();
         } else {
             stop();
+
         }
 
-        
+        runPneumaticToggle();
 
     }
-
 
     public void shoot() {
         if (Time == 0) {
-            Time = System.currentTimeMillis();
-        }
 
+            Time = System.currentTimeMillis();
+
+        }
         spinUp();
 
-        if (System.currentTimeMillis() - Time > Constants.SHOOTER_SHOOT_TIME) {
-            open();
+        if (System.currentTimeMillis() - Time > 720/* in github repo constant */)
+            openSolenoid();
+        // if(RPM() > 6000) openSolenoid();
+    }
+
+    /*
+     * The Toggle below uses a static boolean called pnuematic check to check if the
+     * pneumatics are oppened or closed. If its open, the right trigger will run
+     * both the wheels and the belt. Used the boolean in the Intake class to check
+     * if it is open or not.
+     */
+
+    public void runPneumaticToggle() {
+
+        if (Robot.operatorController.getXButtonPressed()) {
+            if (pneumaticCheckS == false) {
+                openSolenoid();
+                pneumaticCheckS = true;
+            } else if (pneumaticCheckS == true) {
+                lockSolenoid();
+                pneumaticCheckS = false;
+            }
         }
     }
 
-
-    public void open() {
-        shooterSolenoid.set(Value.kReverse);
+    public void openSolenoid() {
+        shooterLock.set(Value.kReverse);
     }
 
-    public void lock() {
-        shooterSolenoid.set(Value.kForward);
+    public void lockSolenoid() {
+        shooterLock.set(Value.kForward);
+    }
+
+    public void stop() {
+        lockSolenoid();
+        spinDown();
+        Time = 0;
+
     }
 
     public void spinUp() {
-        sparkA.getPIDController().setReference(Constants.SHOOTER_TARGET_RPM, ControlType.kVelocity);
+        /*
+         * if (RPM() - 4500 > 50) { spark1.set(0.5); spark2.set(-0.5); } else {
+         * spark1.set(0.8); spark2.set(-0.8); }
+         */
+        double TargetRPM;
+        boolean speedToggle = true;
+
+        if (Robot.operatorController.getStartButtonPressed() && speedToggle) {
+            speedToggle = !speedToggle;
+        }
+        if (speedToggle) {
+            TargetRPM = 4500;
+        } else {
+            TargetRPM = 3500;
+        }
+
+        spark1.getPIDController().setReference(TargetRPM, ControlType.kVelocity);
+
     }
 
     public void spinDown() {
-        sparkA.set(0);
-    }
-    public void stop() {
-        lock();
-        spinDown();
-        Time = 0; 
+        spark1.set(0);
+        spark2.set(0);
     }
 
-    
 }

@@ -19,7 +19,7 @@ public class Intake {
     private boolean intake;
 
     public Intake() {
-        
+
         sparkB = new CANSparkMax(Constants.INTAKE_PORTS[1], MotorType.kBrushless);
         sparkC = new CANSparkMax(Constants.INTAKE_PORTS[2], MotorType.kBrushless);
         sparkD = new CANSparkMax(Constants.INTAKE_PORTS[3], MotorType.kBrushless);
@@ -54,7 +54,6 @@ public class Intake {
             intakeUp();
         }
 
-       
         if (Robot.operatorController.getTriggerAxis(Hand.kLeft) >= Constants.TRIGGER_THRESHOLD) {
             intake();
         } else if (Robot.operatorController.getBumper(Hand.kRight)) {
