@@ -6,8 +6,10 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Limelight;
 import frc.robot.Robot;
+import edu.wpi.first.wpilibj.controller.*;
 
 public class DriveTrain {
 
@@ -20,6 +22,14 @@ public class DriveTrain {
     public static double leftD;
     public static double rightD;
     Limelight Lime;
+    PIDController drivePID;
+
+    int R = 1;
+    int L = 1;
+
+    double kP = 0.08;
+    double speed = 0.9;
+    double min = 0.05;
 
     public DriveTrain() {
         lMotorA = new CANSparkMax(LB_PORT, MotorType.kBrushless);
@@ -36,6 +46,11 @@ public class DriveTrain {
 
         this.switch1 = false;
 
+        Lime = new Limelight();
+
+        drivePID = new PIDController(-(0.2605), 0, 0.069);
+        drivePID.setTolerance(0.5);
+
     }
 
     public void TankDrive() {
@@ -44,8 +59,7 @@ public class DriveTrain {
             switch1 = !switch1;
         }
         // constants
-        int R = 1;
-        int L = 1;
+
         double axisR = Robot.driverController.getY(Hand.kRight);
         double axisL = Robot.driverController.getY(Hand.kLeft);
 
@@ -75,30 +89,39 @@ public class DriveTrain {
     }
 
     public void AlignDriveTrain() {
-        if (Robot.driverController.getBButton()) {
-            if (Lime.targetFound()) {
-                double kP = -0.1;
-                double min = 0.05;
-                double xError = Lime.getTx();
-
-                if (Lime.getTx() > 1.0) {
-                    Adjust = (xError * kP) - min;
-                } else if (Lime.getTx() < 1.0) {
-                    Adjust = (xError * kP) + min;
-                }
-                leftD += Adjust;
-                rightD -= Adjust;
-            } else {
-                System.out.println("Target not found");
+        Lime.selectPipeline(0);
+        if (Lime.targetFound()) {
+            double xError = Lime.getTx();
+            if (Lime.getTx() > 1.0) {
+                Adjust = (xError * kP * speed) - min;
+            } else if (Lime.getTx() < 1.0) {
+                Adjust = (xError * kP * speed) + min;
             }
+            leftD += Adjust;
+            rightD -= Adjust;
 
+            System.out.println(Adjust);
+            System.out.println(leftD + ", " + rightD);
+        } else {
+            System.out.println("Target not found");
         }
 
     }
 
-    public void run() {
-        TankDrive();
-        AlignDriveTrain();
+    public void Align() {
+
+        double Adjust = MathUtil.clamp(drivePID.calculate((Lime.getXError() * 0.3), 0), -0.26, 0.26);
+
+        testDrive.arcadeDrive(0, Adjust);
+
+        // System.out.println(Adjust);
     }
 
+    public void run() {
+        if (Robot.driverController.getBButton()) {
+            Align();
+        } else {
+            TankDrive();
+        }
+    }
 }

@@ -50,6 +50,7 @@ public class Limelight {
         if (number >= 0 && number <= 9) {
             setEntry("pipline", number);
             setLEDMode(0);
+            return;
         }
         throw new IllegalArgumentException("Values range from 0-9");
     }

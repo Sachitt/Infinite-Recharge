@@ -17,9 +17,9 @@ public class Pivot {
     public static CANSparkMax sparkA;
     private DigitalInput lowerLimit;
 
-    private final double pkP = 0.5;
+    private final double pkP = 0.08;
     private final double pkI = 0;
-    private final double pkD = 4;
+    private final double pkD = 3.00;
     private final double pkF = 0;
 
     public Pivot() {
@@ -30,6 +30,7 @@ public class Pivot {
         sparkA.getPIDController().setI(pkI);
         sparkA.getPIDController().setD(pkD);
         sparkA.getPIDController().setFF(pkF);
+        sparkA.getPIDController().setOutputRange(-0.25, 0.25);
 
         sparkA.setInverted(true);
     }
@@ -49,7 +50,7 @@ public class Pivot {
 
     public void run() {
 
-        System.out.println(rev() + ", " + lowerLimit.get());
+        //System.out.println(rev() + ", " + lowerLimit.get());
         // System.out.print;
 
         if (Math.abs(Robot.operatorController.getY(Hand.kLeft)) > 0.2) {
@@ -96,13 +97,13 @@ public class Pivot {
             sparkA.set(Robot.operatorController.getY(Hand.kLeft) * 0.05);
         }
 
-        sparkA.set(Robot.operatorController.getY(Hand.kLeft) * Constants.PIVOT_TELEOP_SPEED);
+        sparkA.set(Robot.operatorController.getY(Hand.kLeft) * -Constants.PIVOT_TELEOP_SPEED);
     }
 
     public void PIDRun(double rotations) {
 
         if (rev() < 10.0) {
-            sparkA.set(0.05);
+            sparkA.set(-0.05);
             return;
         }
 
@@ -110,6 +111,9 @@ public class Pivot {
             sparkA.set(0);
             return;
         }
+        sparkA.getPIDController().setOutputRange(-0.25, 0.2);
+
+        System.out.println(rev()+ ", " + rotations);
         sparkA.getPIDController().setReference(rotations, ControlType.kPosition);
     }
 }
