@@ -24,6 +24,7 @@ public class Robot extends TimedRobot {
 
   public static XboxController driverController;
   public static XboxController operatorController;
+  public static XboxController dancePad;
 
   public static Climb climb;
   public static DriveTrain drivetrain;
@@ -48,6 +49,7 @@ public class Robot extends TimedRobot {
     intake = new Intake();
     pivot = new Pivot();
     shooter = new Shooter();
+    dancePad = new XboxController(2);
   }
 
   /**
@@ -118,11 +120,6 @@ public class Robot extends TimedRobot {
     }
 
     drivetrain.stop();
-  }
-
-  @Override
-  public void teleopInit() {
-    drivetrain.resetGyro();
   }
 
   /**

@@ -1,10 +1,6 @@
 package frc.robot.launcher;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -32,21 +28,13 @@ public class Pivot {
         lowerLimit = new DigitalInput(Constants.PIVOT_LIMIT_PORT);
         alignment = new Alignment();
         initShuffleBoard();
-
-        sparkA.getPIDController().setP(Constants.PIVOT_KP);
-        sparkA.getPIDController().setI(Constants.PIVOT_KI);
-        sparkA.getPIDController().setD(Constants.PIVOT_KD);
-        sparkA.getPIDController().setFF(Constants.PIVOT_KF);
-
-        // Gravity assists downward motion, so auto speed downwards is less
-        sparkA.getPIDController().setOutputRange(-Constants.PIVOT_AUTO_SPEED - 0.05, Constants.PIVOT_AUTO_SPEED);
     }
 
-    public void initShuffleBoard() {
+    public void initShuffleBoard(){
         SmartDashboard.putNumber("Pivot Rev", 0);
     }
 
-    public void workShuffleBoard() {
+    public void workShuffleBoard(){
         SmartDashboard.putNumber("Pivot Rev", getRevolution());
     }
 
@@ -69,19 +57,14 @@ public class Pivot {
     }
 
     public void run() {
-        // System.out.println(getRevolution());
-       
         workShuffleBoard();
         if (Math.abs(Robot.operatorController.getY(Hand.kLeft)) > Constants.TRIGGER_THRESHOLD) {
             teleopRun();
-        } else if (Robot.operatorController.getStickButton(Hand.kRight)) {
-            align();
+        } else if (Robot.operatorController.getBButton()) {
+            // align();
         } else if (Robot.operatorController.getXButton()) {
             callibrate();
-        }  else if (Robot.operatorController.getStickButton(Hand.kLeft)) {
-            reset();
-            
-        }   else {
+        } else {
             // DPad controls
             switch (Robot.operatorController.getPOV()) {
                 case 0:
@@ -107,16 +90,8 @@ public class Pivot {
         }
     }
 
-    private double angleToRev(double angle) {
-        return 1.98 * angle - 51.7;
-    }
-
     public void stop() {
         sparkA.set(0);
-    }
-
-    public void reset() {
-        setRevolution(Constants.PIVOT_ZERO_THRESHOLD);
     }
 
     public void teleopRun() {
@@ -133,23 +108,12 @@ public class Pivot {
 
         if (getRevolution() > Constants.PIVOT_MAX_REVOLUTION && Robot.operatorController.getY(Hand.kLeft) < 0) {
             return;
-
         }
         sparkA.set(Robot.operatorController.getY(Hand.kLeft) * Constants.PIVOT_TELEOP_SPEED);
     }
 
     public void align() {
-        double theta_val = alignment.get_theta();
-        if(theta_val >= 20) {
-            setRevolution((angleToRev(theta_val)));
-        } else {
-            //call other function
-            Shooter.shooterTarget = Constants.SHOOTER_SLOW_TARGET_RPM;
-            double second_theta_val = alignment.get_second_theta();
-            setRevolution(angleToRev(second_theta_val));
-            
-            
-        }
+        setRevolution(alignment.getAngle() * Constants.RADIANS_TO_REV);
     }
 
     public void setAgainst() {
@@ -165,7 +129,7 @@ public class Pivot {
     }
 
     public void setTrench() {
-        setRevolution(7.5);
+        setRevolution(3.8);
     }
 
     public boolean atAlign() {
@@ -189,24 +153,23 @@ public class Pivot {
     }
 
     public void setRevolution(double rev) {
-        // System.out.println(getRevolution() + ", " + rev);
-        
-        double targetRev = rev;
-       
-        // We can prevent the issue of zeroing correctly by preventing the PID
-        // Controller from setting a value below the zero threshold
-
-        if (rev < Constants.PIVOT_ZERO_THRESHOLD) {
-            targetRev = Constants.PIVOT_ZERO_THRESHOLD;
-        } else if (rev > Constants.PIVOT_MAX_REVOLUTION) {
-            targetRev = Constants.PIVOT_MAX_REVOLUTION;
+        double speed = Constants.PIVOT_AUTO_SPEED;
+        int sign = -1;
+        if (rev < getRevolution()) {
+            sign *= -1;
+            speed -= 0.05;
         }
 
-        
+        // Prevent pivot to go below the lowerLimit switch
+        if (!lowerLimit.get() && sign > 0) {
+            callibrate();
+            return;
+        }
 
-
-        sparkA.getPIDController().setReference(-targetRev, ControlType.kPosition);
+        if (Math.abs(getRevolution() - rev) < Constants.PIVOT_THRESHOLD) {
+            sparkA.set(0);
+            return;
+        }
+        sparkA.set(sign * speed);
     }
-
-
 }

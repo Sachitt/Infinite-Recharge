@@ -31,11 +31,9 @@ public class Shooter {
     private CANSparkMax sparkA, sparkB; // (L, R)
     private DoubleSolenoid shooterSolenoid; // (closed, open)
     private double startTime; // stores start time of macro call
-    public static double shooterTarget;
 
     public Shooter() {
         initShuffleBoard();
-        shooterTarget = Constants.SHOOTER_TARGET_RPM;
         // Intialize motors
         sparkA = new CANSparkMax(Constants.SHOOTER_PORTS[0], MotorType.kBrushless);
         sparkB = new CANSparkMax(Constants.SHOOTER_PORTS[1], MotorType.kBrushless);
@@ -72,8 +70,6 @@ public class Shooter {
      * Call periodically in teleopPeriodic
      */
     public void run() {
-        //System.out.println(shooterTarget);
-        // System.out.println(getRPM());
         if (Robot.operatorController.getTriggerAxis(Hand.kRight) >= Constants.TRIGGER_THRESHOLD) {
             shoot();
         } else if (Robot.operatorController.getStartButton()) {
@@ -82,12 +78,6 @@ public class Shooter {
             rotate();
         } else {
             stop();
-        }
-
-        if (Robot.operatorController.getXButton()) {
-            open();
-        } else {
-            close();
         }
 
         workShuffleBoard();
@@ -112,16 +102,16 @@ public class Shooter {
 
         spinUp();
 
-        
+        if (System.currentTimeMillis() - startTime > Constants.SHOOTER_SHOOT_TIME) {
+            open();
+        }
     }
 
     /**
      * Opens tube for shooting
      */
     public void open() {
-        if (System.currentTimeMillis() - startTime > Constants.SHOOTER_SHOOT_TIME && startTime != 0) {
-            shooterSolenoid.set(Value.kReverse);
-        }
+        shooterSolenoid.set(Value.kReverse);
     }
 
     /**
@@ -134,9 +124,7 @@ public class Shooter {
     /**
      * Spins motors at constant power
      */
-
     public void spinUp() {
-        double sped = shooterTarget;
         /**
          * if (getRPM() - Constants.SHOOTER_TARGET_RPM > Constants.SHOOTER_THRESHOLD_RPM) {
             sparkA.set(Constants.SHOOTER_LOWER_SPEED);
@@ -146,24 +134,14 @@ public class Shooter {
             sparkB.set(-Constants.SHOOTER_UPPER_SPEED);
         }
          */
-        if (Robot.operatorController.getStartButtonPressed()) {
-            sped = Constants.SHOOTER_TARGET_RPM; //high speed, right side
-        } else if (Robot.operatorController.getBackButtonPressed()) {
-            sped = Constants.SHOOTER_SLOW_TARGET_RPM; //low speed, left side
-        }
-
-        
-        sparkA.getPIDController().setReference(sped, ControlType.kVelocity);
-        
-
-
+        //sparkA.getPIDController().setReference(Constants.CLUBRUSH_TARGET_RPM, ControlType.kVelocity);
+        sparkA.set(0.5);
     }
 
     /**
      * Stop motors
      */
     public void spinDown() {
-        shooterTarget = Constants.SHOOTER_TARGET_RPM;
         sparkA.set(0);
     }
 
@@ -171,31 +149,30 @@ public class Shooter {
      * Turn motors slowly in the same direction
      */
     public void turn() {
-        // sparkA.set(Constants.SHOOTER_TURN_SPEED);
-        return;
+        sparkA.set(Constants.SHOOTER_TURN_SPEED);
     }
 
     /**
      * Calls turn until the wheel completes 2-3 rotations
      */
     public boolean rotate() {
-        // if (startTime == 0) {
-        //     startTime = System.currentTimeMillis();
-        // }
+        if (startTime == 0) {
+            startTime = System.currentTimeMillis();
+        }
 
-        // if (System.currentTimeMillis() - startTime > Constants.SHOOTER_ROTATE_TIME) {
-        //     spinDown();
-        //     return true;
-        // }
-        // turn();
-        // return false;
-        return false; 
+        if (System.currentTimeMillis() - startTime > Constants.SHOOTER_ROTATE_TIME) {
+            spinDown();
+            return true;
+        }
+        turn();
+        return false;
     }
 
     /**
      * sets motors and pneumatics to default state and resets macros
      */
     public void stop() {
+        close();
         spinDown();
         startTime = 0; // Resets macros timing
     }

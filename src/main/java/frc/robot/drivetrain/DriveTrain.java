@@ -6,8 +6,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -25,8 +23,6 @@ public class DriveTrain {
     private PIDControl pidControl;
     private Alignment alignment;
 
-    private ADXRS450_Gyro mGyro;
-
     public DriveTrain() {
         lsparkA = new CANSparkMax(Constants.DRIVE_LEFT_PORTS[0], MotorType.kBrushless);
         lsparkB = new CANSparkMax(Constants.DRIVE_LEFT_PORTS[1], MotorType.kBrushless);
@@ -38,11 +34,6 @@ public class DriveTrain {
 
         // Group sparks into an ArrayList for a cleaner intialization loop
         ArrayList<CANSparkMax> sparkList = new ArrayList<CANSparkMax>() {
-            /**
-             *
-             */
-            private static final long serialVersionUID = 1L;
-
             {
                 add(lsparkA);
                 add(lsparkB);
@@ -72,60 +63,24 @@ public class DriveTrain {
 
         // Store variables
         this.invert = false;
-
-        this.mGyro = new ADXRS450_Gyro();
-        mGyro.calibrate();
     }
 
     public void run() {
-        if (Robot.driverController.getXButtonPressed()) {
+        if (Robot.driverController.getAButtonPressed()) {
             invert = !invert;
         }
-
         if (Robot.driverController.getBButton()) {
             align();
-        } else if (Robot.driverController.getAButton()) {
-            forward();
-        } else if (Robot.driverController.getYButton()) {
-            backward();
         } else {
             runTankDrive();
-            reset();
+
         }
 
-        System.out.println(mGyro.getRotation2d());
-    }
-
-    public void resetGyro() {
-        mGyro.reset();
+        System.out.println(lsparkA.getEncoder().getVelocity() + " " +lsparkB.getEncoder().getVelocity()+ " " + lsparkC.getEncoder().getVelocity() + "  ,  " + rsparkA.getEncoder().getVelocity() + " " +rsparkB.getEncoder().getVelocity()+ " " + rsparkC.getEncoder().getVelocity());
     }
 
     public void moveForward() {
         drive.arcadeDrive(Constants.DRIVE_FORWARD_SPEED, 0);
-    }
-
-    public void forward() {
-        // LB and RB are used to change the driveSpeed during the match
-        // Drive power constants might be correct
-        double driveSpeed = Constants.DRIVE_REGULAR_POWER;
-        if (Robot.driverController.getBumper(Hand.kLeft))
-            driveSpeed = Constants.DRIVE_SLOW_POWER;
-        else if (Robot.driverController.getBumper(Hand.kRight))
-            driveSpeed = Constants.DRIVE_TURBO_POWER;
-
-        drive.arcadeDrive(driveSpeed, 0);
-    }
-
-    public void backward() {
-        // LB and RB are used to change the driveSpeed during the match
-        // Drive power constants might be correct
-        double driveSpeed = Constants.DRIVE_REGULAR_POWER;
-        if (Robot.driverController.getBumper(Hand.kLeft))
-            driveSpeed = Constants.DRIVE_SLOW_POWER;
-        else if (Robot.driverController.getBumper(Hand.kRight))
-            driveSpeed = Constants.DRIVE_TURBO_POWER;
-
-        drive.arcadeDrive(-driveSpeed, 0);
     }
 
     public void stop() {
@@ -137,7 +92,7 @@ public class DriveTrain {
             drive.arcadeDrive(0, pidControl.getValue(0, alignment.getError()));
         }
     }
-
+    
     public void reset() {
         pidControl.cleanup();
     }
@@ -165,11 +120,8 @@ public class DriveTrain {
         }
 
         // LB and RB are used to change the drivePower during the match
-        double drivePower = Constants.DRIVE_REGULAR_POWER;
-        if (Robot.driverController.getBumper(Hand.kLeft))
-            drivePower = Constants.DRIVE_SLOW_POWER;
-        else if (Robot.driverController.getBumper(Hand.kRight))
-            drivePower = Constants.DRIVE_TURBO_POWER;
+        double drivePower = Constants.CLUBD_POWER;
+       
 
         // However driveExponent should be constant (Changeable by SmartDashboard)
         double driveExponent = SmartDashboard.getNumber("Drive Exponent", 1.8);

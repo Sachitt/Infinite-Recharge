@@ -1,13 +1,8 @@
 package frc.robot.launcher;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 import frc.robot.Constants;
 import frc.robot.limelight.Distance;
 import frc.robot.limelight.LimeLight;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 class Alignment {
     private Distance distance;
@@ -18,7 +13,7 @@ class Alignment {
     private double maxDisplacement;
 
     Alignment() {
-        this.distance = new Distance(Constants.LLH, Constants.MOUNTING_ANGLE, Constants.HP_DIST);
+        this.distance = new Distance(Constants.MOUNTING_HEIGHT, Constants.MOUNTING_ANGLE, Constants.REFRENCE_HEIGHT);
         this.pipeline = Constants.PORT_PIPELINE;
         this.velocity = Constants.SHOOTER_MAX_VELOCITY;
 
@@ -60,87 +55,4 @@ class Alignment {
 
         return Math.acos(getDistance(theta) / (velocity * getTime(theta)));
     }
-
-    public double get_theta(){
-        //creates the array lists for storing values 
-        double ty = limeLight.getTy();
-        double dist = distance.getDistance(ty);
-        
-        ArrayList<Double> theta_list = new ArrayList<>();       
-        ArrayList<Double> difference_list =  new ArrayList<>();
-
-        //adds all the desired values to test for theta to theta_list
-        double number_to_add = 0;
-        while (number_to_add <= 90){
-            theta_list.add(number_to_add);
-            number_to_add += 0.1;           //this is the increment between each theta value tested
-        }
-        
-        //calculates the difference between the left and right side of the equation for each theta value and stores it in difference_list
-        for (double theta : theta_list){
-            double theta_input = Math.toRadians(theta);
-            double COS = Math.cos(theta_input);
-            double SIN = Math.sin(theta_input);
-            double time = (dist+Constants.LLPIV-Constants.LT*COS)/(Constants.V*COS);
-            double leftside = Constants.HP-(Constants.LT*SIN)-Constants.HPIV;
-            double rightside = (Constants.V*SIN*time)+(0.5*Constants.G*(time*time));
-            double difference = Math.abs(leftside - rightside);
-            difference_list.add(difference);
-        }
-
-        //finds the index of the minimum difference
-        int index_of_min = difference_list.indexOf(Collections.min(difference_list));
-
-        //gets and returns the best theta value for the smallest difference between the right and left side of the equation
-        double theta_value = theta_list.get(index_of_min);
-        //System.out.println("Distance: " + dist * 3.281 + ", Theta_value: " + theta_value);
-
-        //some code to test out the physics and find the root of the problem
-        double tAir = dist/(Constants.V*Math.cos(Math.toRadians(theta_value)));
-        double disty = Constants.V*Math.sin(Math.toRadians(theta_value))*tAir + 0.5*Constants.G*tAir*tAir;
-        disty += Constants.HPIV+Constants.LT*Math.sin(Math.toRadians(theta_value));
-        disty *= 3.281;
-        //System.out.println("Time in Air: " + tAir + ", Vertical Distance: " + disty);
-
-        return theta_value;
-    }
-
-    public double get_second_theta(){
-        //gets the distance from limelight 
-        double ty = limeLight.getTy();
-        double dist = distance.getDistance(ty);
-
-        //creates the array lists for storing values 
-        ArrayList<Double> theta_list = new ArrayList<>();
-        ArrayList<Double> difference_list =  new ArrayList<>();
-
-        //adds all the desired values to test for theta to theta_list
-        double number_to_add = 0;
-        while (number_to_add <= 90){
-            theta_list.add(number_to_add);
-            number_to_add += 0.1;           //this is the increment between each theta value tested
-        }
-
-        //calculates the difference between the left and right side of the equation for each theta value and stores it in difference_list
-        for (double theta : theta_list){
-            double theta_input = Math.toRadians(theta);
-            double COS = Math.cos(theta_input);
-            double SIN = Math.sin(theta_input);
-            double vHeight = Constants.HP-(Constants.LT*SIN)-Constants.HPIV;
-            double artDist = (2*Constants.V2*COS*Math.sqrt(2*vHeight/Constants.G))-dist;
-            double time = artDist/(Constants.V2*COS);
-            double rightside = Constants.V2*SIN*(time)+0.5*Constants.G*time*time;
-            double difference = Math.abs(rightside-vHeight);
-            difference_list.add(difference);
-        }
-
-        //finds the index of the minimum difference
-        int index_of_min = difference_list.indexOf(Collections.min(difference_list));
-
-        //gets and returns the best theta value for the smallest difference between the right and left side of the equation
-        double theta_value = theta_list.get(index_of_min);
-
-        return theta_value;
-    }
-
 }
