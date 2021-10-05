@@ -71,6 +71,9 @@ public class Intake {
             tubeShoot();
         } else if (Constants.operatorController.getBButton()) {
             tubeReverse();
+        } else if (Constants.operatorController.getStartButtonPressed()) {
+            intakeDown();
+            intake();
         } else {
             tubeOff();
         }

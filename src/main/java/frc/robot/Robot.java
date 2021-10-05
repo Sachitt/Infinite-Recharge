@@ -23,6 +23,7 @@ import java.io.FileReader;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.DriveTrain.TankValue;
 import org.json.*;
 import org.json.simple.parser.JSONParser;
@@ -54,6 +55,10 @@ public class Robot extends TimedRobot {
 
   JSONObject jsonObject;
   ObjectMapper mapper = new ObjectMapper();
+
+  SendableChooser<Integer> autoChoice;
+
+  public static int autoPath;
   
   /**
    * This function is run when the robot is first started up and should be used
@@ -64,16 +69,14 @@ public class Robot extends TimedRobot {
     drive = new DriveTrain();
     intake = new Intake();
 
-    pathName = "Barrel";
+    autoChoice = new SendableChooser<Integer>();
+    autoChoice.addOption("threeTrench", 1);
+    autoChoice.addOption("fiveTrench", 2);
 
-    if(pathName == "Slalom") {
-      tankVals = drive.buildSlalom();
-    } else if(pathName == "Barrel") {
-      tankVals = drive.buildBarrel();
-    } else if(pathName == "Bounce") {
-      tankVals = drive.buildBounce();
+    autoPath = autoChoice.getSelected().intValue();
+    if (autoPath == 1) {
+      tankVals = drive.threeTrench();
     }
-
     // pathName = drive.evaluatePath();
     //   if(pathName == "ARED") {
     //     tankVals = drive.buildARED();
