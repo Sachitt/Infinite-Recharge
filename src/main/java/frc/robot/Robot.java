@@ -4,31 +4,15 @@
 
 package frc.robot;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import frc.robot.drivetrain.*;
+
 import java.util.List;
-import java.util.Map;
-
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.robot.DriveTrain.TankValue;
+
 import org.json.*;
-import org.json.simple.parser.JSONParser;
-import java.io.*;
-import java.util.*;
+import frc.robot.launcher.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -40,7 +24,16 @@ import java.util.*;
 public class Robot extends TimedRobot {
   private DriveTrain drive;
   private Intake intake;
+
+  public static Climb climb;
+  public static Pivot pivot;
+  public static Shooter shooter;
+
+  private boolean pivotAligned;
+  private double startTime, moveTime;
   private static String pathName;
+
+
 
 
   private static int i = 0;
@@ -69,6 +62,9 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     drive = new DriveTrain();
     intake = new Intake();
+    climb = new Climb(Constants.operatorController);
+    pivot = new Pivot();
+    shooter = new Shooter();
 
     // autoChoice = new SendableChooser<Integer>();
     // autoChoice.addOption("threeTrench", 1);
@@ -161,13 +157,20 @@ public class Robot extends TimedRobot {
       ending = true;
     }
 
+    if (ending == true) {
+
+    }
+
     i++;
+
+
   }
 
 
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
+
   }
 
   /** This function is called periodically during operator control. */
@@ -175,6 +178,9 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     drive.run();
     intake.run();
+    climb.run();
+    pivot.run();
+    shooter.run();
   }
 
   /** This function is called once when the robot is disabled. */
