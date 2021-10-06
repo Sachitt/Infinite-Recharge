@@ -16,7 +16,7 @@ public class Constants {
     public static final int kDriveTrainRCMotor = 10;
 
     public static final double kDriveSlowPower = 0.4;
-    public static final double kDriveRegularPower = 0.7;
+    public static final double kDriveRegularPower = 0.6;
     public static final double kDriveTurboPower = 0.95;
 
     public static final int kIntakeLMotor = 12;

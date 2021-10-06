@@ -20,14 +20,14 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
  * @author Ryan Chaiyakul
  */
 public class Intake {
-    private CANSparkMax sparkA, sparkB, sparkC, sparkD;
+    private CANSparkMax sparkB, sparkC, sparkD;
     private DoubleSolenoid intakeSolenoid;
 
     private boolean intake;
 
     public Intake() {
         // Intialize motors
-        sparkA = new CANSparkMax(Constants.kIntakeLMotor, MotorType.kBrushless);
+        //sparkA = new CANSparkMax(Constants.kIntakeLMotor, MotorType.kBrushless);
         sparkB = new CANSparkMax(Constants.kIntakeRMotor, MotorType.kBrushless);
         sparkC = new CANSparkMax(Constants.kTubeLMotor, MotorType.kBrushless);
         sparkD = new CANSparkMax(Constants.kTubeRMotor, MotorType.kBrushless);
@@ -35,7 +35,7 @@ public class Intake {
         @SuppressWarnings("serial")
         ArrayList<CANSparkMax> shooterSparkMax = new ArrayList<CANSparkMax>() {
             {
-                add(sparkA);
+               // add(sparkA);
                 add(sparkB);
                 add(sparkC);
                 add(sparkD);
@@ -66,6 +66,8 @@ public class Intake {
 
         if (Constants.operatorController.getBumper(Hand.kLeft)) {
             tubeIntake();
+
+
         } else if (Constants.operatorController.getTriggerAxis(Hand.kLeft) >= Constants.kTriggerThreshold
                 || Constants.operatorController.getTriggerAxis(Hand.kRight) >= Constants.kTriggerThreshold) {
             tubeShoot();
@@ -117,17 +119,17 @@ public class Intake {
     }
 
     public void intake() {
-        sparkA.set(Constants.kIntakeSpeed);
+       // sparkA.set(Constants.kIntakeSpeed);
         sparkB.set(-Constants.kIntakeSpeed);
     }
 
     public void intakeReverse() {
-        sparkA.set(-Constants.kIntakeSpeed);
+       // sparkA.set(-Constants.kIntakeSpeed);
         sparkB.set(Constants.kIntakeSpeed);
     }
 
     public void intakeOff() {
-        sparkA.set(0);
+       // sparkA.set(0);
         sparkB.set(0);
     }
 }

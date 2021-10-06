@@ -44,6 +44,7 @@ public class Robot extends TimedRobot {
 
 
   private static int i = 0;
+  public static boolean ending = false;
   public String fileName = "/tankvals.json";
 
   private static List<String> tankVals;
@@ -69,14 +70,14 @@ public class Robot extends TimedRobot {
     drive = new DriveTrain();
     intake = new Intake();
 
-    autoChoice = new SendableChooser<Integer>();
-    autoChoice.addOption("threeTrench", 1);
-    autoChoice.addOption("fiveTrench", 2);
+    // autoChoice = new SendableChooser<Integer>();
+    // autoChoice.addOption("threeTrench", 1);
+    // autoChoice.addOption("fiveTrench", 2);
 
-    autoPath = autoChoice.getSelected().intValue();
-    if (autoPath == 1) {
-      tankVals = drive.threeTrench();
-    }
+    // autoPath = autoChoice.getSelected().intValue();
+    // if (autoPath == 1) {
+    //   tankVals = drive.threeTrench();
+    // }
     // pathName = drive.evaluatePath();
     //   if(pathName == "ARED") {
     //     tankVals = drive.buildARED();
@@ -87,7 +88,7 @@ public class Robot extends TimedRobot {
     //   } else if (pathName == "BBLUE") {
     //     tankVals = drive.buildBBLUE();
     //   }
-
+      tankVals = drive.threeTrench();
 
   }
 
@@ -157,10 +158,12 @@ public class Robot extends TimedRobot {
       drive.tankDrive(Double.parseDouble(templist[0]), Double.parseDouble(templist[1]));
     } else {
       drive.stop();
+      ending = true;
     }
 
     i++;
   }
+
 
   /** This function is called once when teleop is enabled. */
   @Override
