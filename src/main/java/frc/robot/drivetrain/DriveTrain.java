@@ -6,7 +6,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -24,8 +23,6 @@ public class DriveTrain {
 
     private PIDControl pidControl;
     private Alignment alignment;
-
-    private ADXRS450_Gyro mGyro;
 
     public DriveTrain() {
         lsparkA = new CANSparkMax(Constants.DRIVE_LEFT_PORTS[0], MotorType.kBrushless);
@@ -72,9 +69,6 @@ public class DriveTrain {
 
         // Store variables
         this.invert = false;
-
-        this.mGyro = new ADXRS450_Gyro();
-        mGyro.calibrate();
     }
 
     public void run() {
@@ -92,12 +86,6 @@ public class DriveTrain {
             runTankDrive();
             reset();
         }
-
-        System.out.println(mGyro.getRotation2d());
-    }
-
-    public void resetGyro() {
-        mGyro.reset();
     }
 
     public void moveForward() {

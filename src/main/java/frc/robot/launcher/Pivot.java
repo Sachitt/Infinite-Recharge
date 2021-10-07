@@ -202,9 +202,6 @@ public class Pivot {
             targetRev = Constants.PIVOT_MAX_REVOLUTION;
         }
 
-        
-
-
         sparkA.getPIDController().setReference(-targetRev, ControlType.kPosition);
     }
 

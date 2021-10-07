@@ -29,14 +29,13 @@ public class Intake {
 
     public Intake() {
         // Intialize motors
-        sparkA = new CANSparkMax(Constants.INTAKE_PORTS[0], MotorType.kBrushless);
+        //sparkA = new CANSparkMax(Constants.INTAKE_PORTS[0], MotorType.kBrushless);
         sparkB = new CANSparkMax(Constants.INTAKE_PORTS[1], MotorType.kBrushless);
         sparkC = new CANSparkMax(Constants.INTAKE_PORTS[2], MotorType.kBrushless);
         sparkD = new CANSparkMax(Constants.INTAKE_PORTS[3], MotorType.kBrushless);
 
         ArrayList<CANSparkMax> shooterSparkMax = new ArrayList<CANSparkMax>() {
             {
-                add(sparkA);
                 add(sparkB);
                 add(sparkC);
                 add(sparkD);
@@ -115,17 +114,17 @@ public class Intake {
     }
 
     public void intake() {
-        sparkA.set(Constants.INTAKE_INTAKE_SPEED);
+        //sparkA.set(Constants.INTAKE_INTAKE_SPEED);
         sparkB.set(-Constants.INTAKE_INTAKE_SPEED);
     }
 
     public void intakeReverse() {
-        sparkA.set(-Constants.INTAKE_INTAKE_SPEED);
+        //sparkA.set(-Constants.INTAKE_INTAKE_SPEED);
         sparkB.set(Constants.INTAKE_INTAKE_SPEED);
     }
 
     public void intakeOff() {
-        sparkA.set(0);
+        //sparkA.set(0);
         sparkB.set(0);
     }
 }

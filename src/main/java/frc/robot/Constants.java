@@ -80,7 +80,7 @@ public class Constants {
 
     public static double PIVOT_ZERO_THRESHOLD = 5;
     public static double PIVOT_MAX_REVOLUTION = 83;
-    public static double PIVOT_THRESHOLD = 1;
+    public static double PIVOT_THRESHOLD = 6;
 
     public static double PIVOT_KP = 0.6;
     public static double PIVOT_KI = 0;

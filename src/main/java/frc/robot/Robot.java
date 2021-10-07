@@ -92,15 +92,16 @@ public class Robot extends TimedRobot {
       pivot.setLine();
       return;
     }
-    
+
     pivot.stop();
+    
 
     if (startTime == 0) {
       startTime = System.currentTimeMillis();
     }
 
     if (System.currentTimeMillis() - startTime < Constants.AUTO_SHOOT_TIME) {
-      shooter.shoot();
+      shooter.spinUp();
       intake.tubeShoot();
       return;
     }
@@ -122,7 +123,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    drivetrain.resetGyro();
   }
 
   /**
