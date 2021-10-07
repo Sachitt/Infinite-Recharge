@@ -144,6 +144,13 @@ public class DriveTrain {
         rbMotor.setSmartCurrentLimit(Constants.NEO_MAX_CURRENT);
         rcMotor.setSmartCurrentLimit(Constants.NEO_MAX_CURRENT);
 
+        laMotor.setSecondaryCurrentLimit(Constants.NEO_MAX_CURRENT);
+        lbMotor.setSecondaryCurrentLimit(Constants.NEO_MAX_CURRENT);
+        lcMotor.setSecondaryCurrentLimit(Constants.NEO_MAX_CURRENT);
+        raMotor.setSecondaryCurrentLimit(Constants.NEO_MAX_CURRENT);
+        rbMotor.setSecondaryCurrentLimit(Constants.NEO_MAX_CURRENT);
+        rcMotor.setSecondaryCurrentLimit(Constants.NEO_MAX_CURRENT);
+
         lGroup = new SpeedControllerGroup(laMotor, lbMotor, lcMotor);
         rGroup = new SpeedControllerGroup(raMotor, rbMotor, rcMotor);
 

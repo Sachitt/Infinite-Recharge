@@ -106,7 +106,8 @@ public class Constants {
     public static double RADIANS_TO_REV = 1/2.01; // NEED TO GET
 
     // Auto Constants
-    public static double AUTO_SHOOT_TIME = 2000;
+    public static double AUTO_SHOOT_TIME = 1000;
+    public static double AUTO_SPIN_UP_TIME = 1000;
     public static double AUTO_MOVE_TIME = 1500;
     public static double DRIVE_FORWARD_SPEED = 0.5;
 

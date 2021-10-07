@@ -140,30 +140,63 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+    drive.stop();
+    pivotAligned = pivot.atLine();
+    if (!pivotAligned) {
+      pivot.setLine();
+      return;
+    }
+
+    pivot.stop();
+
+    if (startTime == 0) {
+      startTime = System.currentTimeMillis();
+    }
+
+    if (System.currentTimeMillis() - startTime < Constants.AUTO_SPIN_UP_TIME) {
+      shooter.spinUp();
+      intake.tubeShoot();
+      return;
+    }
+
+    shooter.stop();
+    intake.tubeOff();
+
+  }
+  private void secondary() {
     if (!initialFlag) {
       initialTeleop();
-    } else {
-      // Run intake and tube
-      intake.intakeDown();
-      intake.tubeIntake();
-      intake.intake();
-
-      // Iterate over tankValues until all motor values are set. Then stop until
-      // autonomous is disabled
-      if (i < tankVals.size() - 1) {
-        String[] templist = tankVals.get(i).split("!");
-        drive.tankDrive(Double.parseDouble(templist[0]), Double.parseDouble(templist[1]));
-      } else {
-        drive.stop();
-        ending = true;
-      }
-
-      if (ending == true) {
-
-      }
-
-      i++;
+      return;
     }
+
+    pivotAligned = pivot.atRev(0);
+    if (!pivotAligned) {
+      pivot.setRevolution(0);
+      return;
+    }
+
+    pivot.stop();
+
+    // Run intake and tube
+    intake.intakeDown();
+    intake.tubeIntake();
+    intake.intake();
+
+    // Iterate over tankValues until all motor values are set. Then stop until
+    // autonomous is disabled
+    if (i < tankVals.size() - 1) {
+      String[] templist = tankVals.get(i).split("!");
+      drive.tankDrive(Double.parseDouble(templist[0]), Double.parseDouble(templist[1]));
+    } else {
+      drive.stop();
+      ending = true;
+    }
+
+    if (ending == true) {
+
+    }
+
+    i++;
 
   }
 
@@ -180,12 +213,19 @@ public class Robot extends TimedRobot {
       startTime = System.currentTimeMillis();
     }
 
-    if (System.currentTimeMillis() - startTime < Constants.AUTO_SHOOT_TIME) {
-      shooter.shoot();
+    if (System.currentTimeMillis() - startTime < Constants.AUTO_SPIN_UP_TIME) {
+      shooter.spinUp();
       intake.tubeShoot();
       return;
     }
 
+    if (System.currentTimeMillis() - startTime < Constants.AUTO_SHOOT_TIME) {
+      shooter.open();
+      intake.tubeShoot();
+      return;
+    }
+
+    shooter.close();
     shooter.stop();
     intake.tubeOff();
 
