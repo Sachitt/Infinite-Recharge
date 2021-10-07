@@ -137,6 +137,13 @@ public class DriveTrain {
         rbMotor.setIdleMode(IdleMode.kBrake);
         rcMotor.setIdleMode(IdleMode.kBrake);
 
+        laMotor.setSmartCurrentLimit(Constants.NEO_MAX_CURRENT);
+        lbMotor.setSmartCurrentLimit(Constants.NEO_MAX_CURRENT);
+        lcMotor.setSmartCurrentLimit(Constants.NEO_MAX_CURRENT);
+        raMotor.setSmartCurrentLimit(Constants.NEO_MAX_CURRENT);
+        rbMotor.setSmartCurrentLimit(Constants.NEO_MAX_CURRENT);
+        rcMotor.setSmartCurrentLimit(Constants.NEO_MAX_CURRENT);
+
         lGroup = new SpeedControllerGroup(laMotor, lbMotor, lcMotor);
         rGroup = new SpeedControllerGroup(raMotor, rbMotor, rcMotor);
 
