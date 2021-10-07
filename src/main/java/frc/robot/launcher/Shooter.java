@@ -124,6 +124,10 @@ public class Shooter {
         }
     }
 
+    public void openSudo() {
+        shooterSolenoid.set(Value.kReverse);
+    }
+
     /**
      * Closes tube for shooting
      */

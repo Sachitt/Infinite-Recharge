@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
   private boolean pivotAligned;
   private double startTime;
 
-  private boolean initialFlag;
+  private boolean initialFlag, secondaryFlag;
 
   private static String pathName;
 
@@ -118,8 +118,10 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     pivotAligned = false;
     startTime = 0;
+    i=0;
 
     initialFlag = false;
+    secondaryFlag = false;
   }
 
   // FileReader reader;
@@ -140,13 +142,24 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    drive.stop();
+    if (!initialFlag) {
+      initialTeleop();
+      return;
+    }
+    if (!secondaryFlag) {
+      secondary();
+      return;
+    }
+
+    intake.intakeOff();
+    intake.intakeUp();
+
     pivotAligned = pivot.atLine();
     if (!pivotAligned) {
       pivot.setLine();
       return;
     }
-
+    
     pivot.stop();
 
     if (startTime == 0) {
@@ -159,16 +172,16 @@ public class Robot extends TimedRobot {
       return;
     }
 
-    shooter.stop();
-    intake.tubeOff();
-
-  }
-  private void secondary() {
-    if (!initialFlag) {
-      initialTeleop();
+    if (System.currentTimeMillis() - startTime < Constants.AUTO_SHOOT_TIME) {
+      shooter.openSudo();
       return;
     }
 
+    shooter.close();
+    shooter.spinDown();
+    intake.tubeOff();
+  }
+  private void secondary() {
     pivotAligned = pivot.atRev(0);
     if (!pivotAligned) {
       pivot.setRevolution(0);
@@ -189,11 +202,7 @@ public class Robot extends TimedRobot {
       drive.tankDrive(Double.parseDouble(templist[0]), Double.parseDouble(templist[1]));
     } else {
       drive.stop();
-      ending = true;
-    }
-
-    if (ending == true) {
-
+      secondaryFlag = true;
     }
 
     i++;
@@ -220,16 +229,16 @@ public class Robot extends TimedRobot {
     }
 
     if (System.currentTimeMillis() - startTime < Constants.AUTO_SHOOT_TIME) {
-      shooter.open();
+      shooter.openSudo();
       intake.tubeShoot();
       return;
     }
 
     shooter.close();
-    shooter.stop();
-    intake.tubeOff();
+    shooter.spinDown();
 
     initialFlag = true;
+    startTime = 0;
   }
 
   /** This function is called once when teleop is enabled. */
