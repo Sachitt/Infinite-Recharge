@@ -30,11 +30,11 @@ public class Robot extends TimedRobot {
   public static Shooter shooter;
 
   private boolean pivotAligned;
-  private double startTime, moveTime;
+  private double startTime;
+
+  private boolean initialFlag;
+
   private static String pathName;
-
-
-
 
   private static int i = 0;
   public static boolean ending = false;
@@ -53,7 +53,7 @@ public class Robot extends TimedRobot {
   SendableChooser<Integer> autoChoice;
 
   public static int autoPath;
-  
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -72,19 +72,19 @@ public class Robot extends TimedRobot {
 
     // autoPath = autoChoice.getSelected().intValue();
     // if (autoPath == 1) {
-    //   tankVals = drive.threeTrench();
+    // tankVals = drive.threeTrench();
     // }
     // pathName = drive.evaluatePath();
-    //   if(pathName == "ARED") {
-    //     tankVals = drive.buildARED();
-    //   } else if (pathName == "ABLUE") {
-    //     tankVals = drive.buildABLUE();
-    //   } else if (pathName == "BRED") {
-    //     tankVals = drive.buildBRED();
-    //   } else if (pathName == "BBLUE") {
-    //     tankVals = drive.buildBBLUE();
-    //   }
-      tankVals = drive.threeTrench();
+    // if(pathName == "ARED") {
+    // tankVals = drive.buildARED();
+    // } else if (pathName == "ABLUE") {
+    // tankVals = drive.buildABLUE();
+    // } else if (pathName == "BRED") {
+    // tankVals = drive.buildBRED();
+    // } else if (pathName == "BBLUE") {
+    // tankVals = drive.buildBBLUE();
+    // }
+    tankVals = drive.threeTrench();
 
   }
 
@@ -116,56 +116,81 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    pivotAligned = false;
+    startTime = 0;
 
+    initialFlag = false;
+  }
 
-      
-      
+  // FileReader reader;
+  // try {
+  // reader = new FileReader("src/main/java/frc/robot/tankvals.json");
+  // } catch (FileNotFoundException e) {
+  // e.printStackTrace();
+  // }
+  // JSONParser jsonParser = new JSONParser();
+  // jsonObject = (JSONObject) jsonParser.parse(reader);
+  // System.out.println(jsonObject);
+  // tankValues = new ArrayList<TankValue>();
+  // // tankValues = mapper.readValue(Paths.get("src/main/deploy/tankvals.json"),
+  // TankValue.class);
 
-    }
-    
-    // FileReader reader;
-    // try {
-    //   reader = new FileReader("src/main/java/frc/robot/tankvals.json");
-    // } catch (FileNotFoundException e) {
-    //   e.printStackTrace();
-    // }
-    // JSONParser jsonParser = new JSONParser();
-    // jsonObject = (JSONObject) jsonParser.parse(reader);
-    // System.out.println(jsonObject);
-    // tankValues = new ArrayList<TankValue>();
-    // // tankValues = mapper.readValue(Paths.get("src/main/deploy/tankvals.json"), TankValue.class);
-
-  //}
+  // }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    // Run intake and tube
-    // intake.intakeDown();
-    // intake.tubeIntake();
-    // intake.intake();
-
-    
-
-    // Iterate over tankValues until all motor values are set. Then stop until
-    // autonomous is disabled
-    if (i < tankVals.size() - 1) {
-      String[] templist = tankVals.get(i).split("!");
-      drive.tankDrive(Double.parseDouble(templist[0]), Double.parseDouble(templist[1]));
+    if (!initialFlag) {
+      initialTeleop();
     } else {
-      drive.stop();
-      ending = true;
+      // Run intake and tube
+      intake.intakeDown();
+      intake.tubeIntake();
+      intake.intake();
+
+      // Iterate over tankValues until all motor values are set. Then stop until
+      // autonomous is disabled
+      if (i < tankVals.size() - 1) {
+        String[] templist = tankVals.get(i).split("!");
+        drive.tankDrive(Double.parseDouble(templist[0]), Double.parseDouble(templist[1]));
+      } else {
+        drive.stop();
+        ending = true;
+      }
+
+      if (ending == true) {
+
+      }
+
+      i++;
     }
-
-    if (ending == true) {
-
-    }
-
-    i++;
-
 
   }
 
+  private void initialTeleop() {
+    pivotAligned = pivot.atLine();
+    if (!pivotAligned) {
+      pivot.setLine();
+      return;
+    }
+
+    pivot.stop();
+
+    if (startTime == 0) {
+      startTime = System.currentTimeMillis();
+    }
+
+    if (System.currentTimeMillis() - startTime < Constants.AUTO_SHOOT_TIME) {
+      shooter.shoot();
+      intake.tubeShoot();
+      return;
+    }
+
+    shooter.stop();
+    intake.tubeOff();
+
+    initialFlag = true;
+  }
 
   /** This function is called once when teleop is enabled. */
   @Override
