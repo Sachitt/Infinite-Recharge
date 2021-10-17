@@ -69,7 +69,7 @@ public class Constants {
     public static double SHOOTER_MAX_VELOCITY = 10; // Meters/second
 
     // Intake Constants
-    public static double INTAKE_INTAKE_SPEED = 0.8;
+    public static double INTAKE_INTAKE_SPEED = 0.4;
     public static double INTAKE_TUBE_SPEED = 0.7;
     public static double INTAKE_SHOOT_SPEED = 1;
 
